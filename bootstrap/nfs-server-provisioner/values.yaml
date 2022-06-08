@@ -74,7 +74,8 @@ nfs-server-provisioner:
     parameters: {}
 
     mountOptions:
-      - vers=3
+      - hard
+      - nfsvers=4.1
 
     ## ReclaimPolicy field of the class, which can be either Delete or Retain
     reclaimPolicy: Delete
