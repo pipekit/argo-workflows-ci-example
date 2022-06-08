@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nfs-server-provisioner
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: nfs-server-provisioner
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: bootstrap/nfs-server-provisioner
+    repoURL: 'https://github.com/sendible-labs/argo-workflows-ci-example.git'
+    targetRevision: HEAD
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - PrunePropagationPolicy=background
+      - CreateNamespace=true
