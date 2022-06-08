@@ -1,0 +1,14 @@
+apiVersion: v1
+data:
+  ui.bannercontent: "Security Goose says: This is a demo installation for the argo-workflows-ci-example. Not for production use. Honk!"
+  ui.bannerpermanent: "true"
+  configManagementPlugins: |-
+    - name: argocd-lovely-plugin
+      generate:
+        command: ["argocd-lovely-plugin"]
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+  name: argocd-cm
