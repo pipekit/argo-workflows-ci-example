@@ -1,4 +1,4 @@
-nfs-ganesha-server-and-external-provisioner:  
+nfs-server-provisioner:  
   # Default values for nfs-provisioner.
   # This is a YAML-formatted file.
   # Declare variables to be passed into your templates.
