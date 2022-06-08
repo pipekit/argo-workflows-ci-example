@@ -1,0 +1,98 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: ci-workflow
+  labels:
+    git_branch: ""
+    target_branch: ""
+    git_repo: ""
+    pr_num: ""
+spec:
+  metrics:
+    prometheus:
+      - name: exec_duration_gauge
+        labels:
+          - key: name
+            value: "ci-workflow"
+          - key: type
+            value: "pull-request"
+          - key: status
+            value: "{{status}}"
+        help: "Duration gauge by name"
+        gauge:
+          value: "{{workflow.duration}}"
+          realtime: false
+      - name: result_counter
+        help: "Count of step execution by result status"
+        labels:
+          - key: status
+            value: Failed
+          - key: name
+            value: "ci-workflow"
+          - key: type
+            value: "pull-request"
+        when: "{{status}} == Failed"
+        counter:
+          value: "1"
+      - name: result_counter
+        help: "Count of step execution by result status"
+        labels:
+          - key: status
+            value: Succeeded
+          - key: name
+            value: "ci-workflow"
+          - key: type
+            value: "pull-request"
+        when: "{{status}} == Succeeded"
+        counter:
+          value: "1"
+  entrypoint: main
+  volumeClaimTemplates:
+  - metadata:
+      name: workdir
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: nfs
+      resources:
+        requests:
+          storage: 1Gi
+  volumes:
+  - name: unittest
+    emptyDir: {}
+  arguments:
+    parameters:
+    - name: app_repo
+      value: "argo-workflows-ci-example"
+    - name: git_branch
+      value: ""
+    - name: target_branch
+      value: ""
+    - name: git_sha
+      value: ""
+    - name: target_sha
+      value: ""
+    - name: container_tag
+      value: "stable"
+    - name: pull_request_url
+      value: ''
+    - name: container_image
+      value: "hello-world"
+    - name: dockerfile
+      value: "Dockerfile"
+    - name: path
+      value: "/CI/"
+    - name: pr_num
+      value: ""
+  templates:
+    - name: main
+      dag:
+        tasks:
+          # - name: pr-merge-checker
+          #   templateRef:
+          #     name: pr-merge-checker
+          #     template: main
+          - name: git-checkout-pr
+            templateRef:
+              name: git-checkout-pr
+              template: git-checkout-pr
+            # depends: pr-merge-checker

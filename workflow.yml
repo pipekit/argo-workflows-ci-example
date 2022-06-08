@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  name: ci-workflow-1234
+  namespace: argo
+  labels:
+    git_branch: ""
+    target_branch: ""
+    git_repo: ""
+    pr_num: ""
+    workflows.argoproj.io/workflow-template: ci-workflow
+spec:
+  arguments:
+    parameters:
+      - name: app_repo
+        value: "argo-workflows-ci-example"
+      - name: git_branch
+        value: ''
+      - name: target_branch
+        value: ''
+      - name: git_sha
+        value: ''
+      - name: target_sha
+        value: ''
+      - name: container_tag
+        value: 'stable'
+      - name: pull_request_url
+        value: ''
+      - name: pr_num
+        value: ""
+      - name: container_image
+        value: "hello-world"
+      - name: dockerfile
+        value: Dockerfile
+      - name: path
+        value: "/CI/"
+  workflowTemplateRef:
+    name: ci-workflow

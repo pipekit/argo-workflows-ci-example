@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: git-checkout-pr
+spec:
+  entrypoint: main
+  templates:
+  - name: main
+    dag:
+      tasks:
+        - name: git-checkout-pr
+          template: git-checkout-pr
+
+  - name: git-checkout-pr
+    container:
+      image: alpine:latest
+      command:
+        - sh
+        - -c
+        - |
+          RUN apk --update add git
+
+          cd /workdir
+          echo "Start Clone of source branch"
+          git clone https://github.com/sendible-labs/{{workflow.parameters.app_repo}}.git
+          cd {{workflow.parameters.app_repo}}
+          git checkout {{workflow.parameters.git_branch}}
+
+          echo "Merge in target branch"
+          git merge origin/{{workflow.parameters.target_branch}}
+
+          echo "Complete."
+      volumeMounts:
+      - name: "workdir"
+        mountPath: /workdir
+      resources:
+        requests:
+          memory: 250Mi
+          cpu: 4m
+      #20 minutes
+      activeDeadlineSeconds: 1200
