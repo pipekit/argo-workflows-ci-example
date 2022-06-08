@@ -9,3 +9,7 @@ patches:
   target:
     kind: ConfigMap
     name: workflow-controller-configmap
+- path: argo-server-deployment.yaml
+  target:
+    kind: Deployment
+    name: argo-server
