@@ -18,7 +18,7 @@ spec:
         - sh
         - -c
         - |
-          RUN apk --update add git
+          apk --update add git
 
           cd /workdir
           echo "Start Clone of source branch"

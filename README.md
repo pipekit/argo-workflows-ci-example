@@ -2,8 +2,8 @@
 A basic CI leveraging Argo Workflows.
 
 ## The Workflow...
-* pulls a repo from git. Spefically pulling a branch based on a pull request;
-* Tests that the PR branch is mergeable into its target;
+* pulls a repo from git. Specifically pulling a branch based on a pull request;
+* merges the target branch into it
 * simulates a unit test;
 * builds a container from a dockerfile and pushes to a registry;
 * builds a non-container binary and stores it in the Argo Workflows artifact repository;
@@ -18,13 +18,16 @@ In order to run this locally, you will need [k3d](https://k3d.io/) installed, as
 chmod +x setup.sh
 ./setup.sh
 ```
+Once the setup is completed (3-7 mins), you can view the argo-workflows UI at https://localhost:2746/workflows/argo?limit=500 (the S in https is important, you'll need to accept the self-signed certificate). Make sure you are looking at the 'argo' namespace.
+
+Then you can deploy the workflow and you should see it appear in the UI.
+```
+kubectl -n argo apply -f workflow.yml 
+```
+
 
 ### Running on a remote cluster
 You will need kubectl installed locally, with the appropriate configuration to allow you access to the cluster.
-## Running
-### Running Locally
-
-### Running on a remote cluster
 You will need to use an empty cluster that you don't care about. This script blindly installs and configures a number of tools and has no regard for what you already have installed. If you're at all not sure, we recommend you use a local cluster instead.
 
 
