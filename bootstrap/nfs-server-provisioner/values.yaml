@@ -1,4 +1,4 @@
-nfs-server-provisioner:  
+nfs-ganesha-server-and-external-provisioner:  
   # Default values for nfs-provisioner.
   # This is a YAML-formatted file.
   # Declare variables to be passed into your templates.
@@ -8,14 +8,16 @@ nfs-server-provisioner:
   # imagePullSecrets:
 
   image:
-    repository: quay.io/kubernetes_incubator/nfs-provisioner
-    tag: v2.3.0
-    pullPolicy: Always
+    repository: k8s.gcr.io/sig-storage/nfs-provisioner
+    tag: v3.0.0
+    # digest:
+    pullPolicy: IfNotPresent
 
   # For a list of available arguments
-  # Please see https://github.com/kubernetes-incubator/external-storage/blob/master/nfs/docs/deployment.md#arguments
+  # Please see https://github.com/kubernetes-incubator/external-storage/blob/HEAD/nfs/docs/deployment.md#arguments
   extraArgs: {}
     # device-based-fsids: false
+    # grace-period: 0
 
   service:
     type: ClusterIP
@@ -32,6 +34,7 @@ nfs-server-provisioner:
     # rquotadNodePort:
     # rpcbindNodePort:
     # statdNodePort:
+    # clusterIP:
 
     externalIPs: []
 
@@ -83,6 +86,17 @@ nfs-server-provisioner:
     ## Ignored if rbac.create is true
     ##
     serviceAccountName: default
+
+  ## For creating the PriorityClass automatically:
+  priorityClass:
+    ## Enable creation of a PriorityClass resource for this nfs-server-provisioner instance
+    create: false
+
+    ## Set a PriorityClass name to override the default name
+    name: ""
+
+    ## PriorityClass value. The higher the value, the higher the scheduling priority
+    value: 5
 
   resources: {}
     # limits:
