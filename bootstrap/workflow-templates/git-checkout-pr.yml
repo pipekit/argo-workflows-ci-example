@@ -27,6 +27,8 @@ spec:
           git checkout {{workflow.parameters.git_branch}}
 
           echo "Merge in target branch"
+          ## This line is a hack just for the example.
+          git config --global --add safe.directory /workdir/argo-workflows-ci-example
           git merge origin/{{workflow.parameters.target_branch}}
 
           echo "Complete."

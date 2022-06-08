@@ -21,7 +21,7 @@ spec:
       - name: git_sha
         value: '18745a01f9ec8ace2add5c1c5301ffce0148b40e'
       - name: target_sha
-        value: '51f6cd8e7f05d0da9996b894f34b7d6cc4682dac'
+        value: '58609dd27fe80dedbe3105b24b8d9ba97df8fd47'
       - name: container_tag
         value: 'stable'
       - name: pull_request_url
