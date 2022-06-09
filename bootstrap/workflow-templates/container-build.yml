@@ -25,7 +25,7 @@ spec:
 
         ls -lrt /container-build/{{workflow.parameters.app_repo}}{{workflow.parameters.path}}/
 
-        /kaniko/executor --dockerfile="/container-build/{{workflow.parameters.app_repo}}{{workflow.parameters.path}}/{{workflow.parameters.dockerfile}}" --destination={{workflow.parameters.container_image}}:{{workflow.parameters.container_tag}} --cache=true --use-new-run=true --reproducible=true --push-retry=3
+        /kaniko/executor --dockerfile="/container-build/{{workflow.parameters.app_repo}}{{workflow.parameters.path}}/{{workflow.parameters.dockerfile}}" --destination={{workflow.parameters.container_image}}:{{workflow.parameters.container_tag}} --context="dir:///container-build/{{workflow.parameters.app_repo}}/{{workflow.parameters.path}}" --cache=true --use-new-run=true --reproducible=true --push-retry=3
       volumeMounts:
         - name: container-build
           mountPath: /container-build
