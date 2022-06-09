@@ -57,6 +57,11 @@ If you wish, you can modify the parameters in workflow.yml as follows and you'll
 
 You can of course adjust other paramaters as you see fit, and keep running the workflows to experiment. You may need to change the final-application deployment.
 
+# Deleting the cluster
+```
+k3d cluster delete workflows-ci
+```
+
 # Running in production
 This is a very simplified workflow aiming to highlight what's possible using Argo Workflows. Some things to consider when running in production:
 
