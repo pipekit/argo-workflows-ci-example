@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: deploy-application
+spec:
+  entrypoint: main
+  templates:
+  - name: main
+    dag:
+      tasks:            
+        - name: deploy-application
+          template: deploy-application
+
+  - name: deploy-application
+    resource:
+      action: create
+      # setOwnerReference: true
+      successCondition: status.health.status == Healthy
+      failureCondition: status.health.status == Degraded
+      manifest: |
+        apiVersion: argoproj.io/v1alpha1
+        kind: Application
+        metadata:
+          name: final-application
+          finalizers:
+            - resources-finalizer.argocd.argoproj.io
+          namespace: argocd
+        spec:
+          destination:
+            name: ''
+            namespace: final-application
+            server: 'https://kubernetes.default.svc'
+          project: default
+          source:
+            path: bootstrap/final-application
+            repoURL: 'https://github.com/sendible-labs/argo-workflows-ci-example.git'
+            targetRevision: HEAD
+          syncPolicy:
+            automated:
+              prune: true
+              selfHeal: true
+            syncOptions:
+              - PrunePropagationPolicy=background
+              - PruneLast=true
+              - CreateNamespace=true

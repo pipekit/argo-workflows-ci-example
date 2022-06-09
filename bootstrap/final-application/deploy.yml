@@ -1,0 +1,74 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: example-application
+  labels:
+    app: example-application
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: example-application
+  template:
+    metadata:
+      labels:
+        app: example-application
+    spec:
+      containers:
+        - name: suptool
+          image: k3d-registry.localhost:5000/hello-world:stable
+          imagePullPolicy: Always
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            requests:
+              cpu: 3m
+              memory: 20Mi
+            limits:
+              cpu: 10m
+              memory: 64Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-application
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: example-application
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-application
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: localhost
+    http:
+      paths:
+      - path: /argo-workflows-ci-example/(.*)
+        pathType: Prefix
+        backend:
+          service: 
+            name: example-application
+            port: 
+              number: 80
+  tls:
+  - hosts:
+    - localhost
+    secretName: tls.localhost

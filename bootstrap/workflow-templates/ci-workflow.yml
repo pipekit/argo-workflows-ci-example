@@ -101,3 +101,8 @@ spec:
               name: container-build
               template: main
             depends: html-modifier
+          - name: deploy-application
+            templateRef:
+              name: deploy-application
+              template: main
+            depends: container-build
