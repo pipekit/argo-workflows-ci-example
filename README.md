@@ -18,11 +18,11 @@ In order to run this locally, you will need [k3d](https://k3d.io/) installed, as
 chmod +x setup.sh
 ./setup.sh
 ```
-Once the setup is completed (3-7 mins), you can view the argo-workflows UI at https://localhost:8443/workflows/argo?limit=500 (the S in https is important, you'll need to accept the self-signed certificate). Make sure you are looking at the 'argo' namespace.
+Once the setup is completed (3-7 mins), you can view the argo-workflows UI at https://localhost:8443/workflows/argo?limit=500 (the S in https is important and you'll need to accept the self-signed certificate). Make sure you are looking at the 'argo' namespace.
 
 Then you can deploy the workflow and you should see it appear in the UI.
 ```
-kubectl -n argo apply -f workflow.yml 
+kubectl -n argo create -f workflow.yml 
 ```
 
 

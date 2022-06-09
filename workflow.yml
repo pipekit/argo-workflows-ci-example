@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
-  name: ci-workflow-1234
+  generateName: ci-workflow-
   namespace: argo
   labels:
     git_branch: ""
