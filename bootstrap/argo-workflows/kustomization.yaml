@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
 - https://github.com/argoproj/argo-workflows/releases/download/v3.3.6/install.yaml
 - ingress.yaml
-- rolebiding.yml
+- rolebinding.yml
 
 patches:
 - path: workflow-controller-configmap.yaml

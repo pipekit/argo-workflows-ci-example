@@ -31,12 +31,12 @@ kubectl -n argo create -f workflow.yml
 
 Once the workflow has successfuly run, you can navigate to https://localhost:8443/argo-workflows-ci-example/ in your browser. The website should tell you the branch that it was built from (the default is 'example') and the name of the workflow that built it.
 
-You can delete the Argocd CD application to remove the deployment:
+You can delete the Argocd CD application to remove the deployment. You should do this before re-running the workflow:
 ```
 kubectl -n argocd delete application final-application
 ```
 
-IF you wish, you can modify the parameters in workflow.yml as follows and you'll build from our second example branch:
+If you wish, you can modify the parameters in workflow.yml as follows and you'll build from our second example branch:
 ```
     parameters:
       - name: app_repo
@@ -45,10 +45,6 @@ IF you wish, you can modify the parameters in workflow.yml as follows and you'll
         value: 'another-example'
       - name: target_branch
         value: 'main'
-      - name: git_sha
-        value: 'b5949deeadbd5d1ad0893b6ef5eac84ac2dab703'
-      - name: target_sha
-        value: '9b9fe2ccf311185717ac012cc86ec0c99b50fd6e'
       - name: container_tag
         value: 'stable'
       - name: container_image
