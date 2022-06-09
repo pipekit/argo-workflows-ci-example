@@ -19,9 +19,9 @@ spec:
       - name: target_branch
         value: 'main'
       - name: git_sha
-        value: '18745a01f9ec8ace2add5c1c5301ffce0148b40e'
+        value: '7498b785266e5d7f6e088e54ee957805aad2e9e6'
       - name: target_sha
-        value: '58609dd27fe80dedbe3105b24b8d9ba97df8fd47'
+        value: '9b9fe2ccf311185717ac012cc86ec0c99b50fd6e'
       - name: container_tag
         value: 'stable'
       - name: pull_request_url
