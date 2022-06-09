@@ -3,10 +3,10 @@ A basic CI leveraging Argo Workflows.
 
 ## The Workflow...
 * pulls a repo from git. Specifically pulling a branch based on a pull request;
-* merges the target branch into it
-* simulates a unit test;
-* builds a container from a dockerfile and pushes to a registry;
-* builds a non-container binary and stores it in the Argo Workflows artifact repository;
+* merges the target branch into it;
+* modifies the html that will be copied into the container to inject the unique name of the running workflow;
+* builds a container from a Dockerfile and pushes to a registry;
+* deploys an Argo CD application that uses the newly-built container to deploy a static website.
 
 It does not pretend to be a definitive example, but it aims to inspire.
 In order to make this a semi-usable example, we have cut a number of security corners. Please don't just blindly run this in production.

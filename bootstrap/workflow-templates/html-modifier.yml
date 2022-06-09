@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: html-modifier
+spec:
+  entrypoint: main
+  templates:
+    - name: main
+      dag:
+        tasks:
+          - name: html-modifier
+            template: html-modifier
+
+    - name: html-modifier
+      container:
+        image: ubuntu:latest
+        command:
+          - /bin/bash
+          - -c
+          - |
+            cd /workdir/{{workflow.parameters.app_repo}}/CI
+
+            if grep -q CHANGEMEPLEASE index.html; then
+              cat index.html | sed -E 's/CHANGEMEPLEASE/{{workflow.name}}/g' > tmp_index.html
+              mv tmp_index.html index.html
+            else
+              echo "CHANGEMEPLEASE was not found in index.html. Exiting"
+              exit 1
+            fi
+
+            cat index.html
+
+        volumeMounts:
+          - name: workdir
+            mountPath: /workdir
+      resources:
+        requests:
+          memory: 256Mi
+          cpu: 100m
+      #20 minutes
+      activeDeadlineSeconds: 1200
