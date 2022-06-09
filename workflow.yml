@@ -33,6 +33,6 @@ spec:
       - name: dockerfile
         value: Dockerfile
       - name: path
-        value: "/CI/"
+        value: "/CI"
   workflowTemplateRef:
     name: ci-workflow
