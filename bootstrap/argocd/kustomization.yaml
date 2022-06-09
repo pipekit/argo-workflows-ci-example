@@ -5,7 +5,6 @@ namespace: argocd
 resources:
 - https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 - namespace.yml
-- ingress.yml
 
 patches:
 - path: argo-cm.yml
