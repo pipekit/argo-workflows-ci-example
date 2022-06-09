@@ -67,21 +67,13 @@ spec:
       value: ""
     - name: target_branch
       value: ""
-    - name: git_sha
-      value: ""
-    - name: target_sha
-      value: ""
     - name: container_tag
       value: "stable"
-    - name: pull_request_url
-      value: ''
     - name: container_image
       value: ""
     - name: dockerfile
       value: ""
     - name: path
-      value: ""
-    - name: pr_num
       value: ""
   templates:
     - name: main

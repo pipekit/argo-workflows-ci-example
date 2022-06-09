@@ -4,10 +4,6 @@ metadata:
   generateName: ci-workflow-
   namespace: argo
   labels:
-    git_branch: ""
-    target_branch: ""
-    git_repo: ""
-    pr_num: ""
     workflows.argoproj.io/workflow-template: ci-workflow
 spec:
   arguments:
@@ -18,16 +14,8 @@ spec:
         value: 'example'
       - name: target_branch
         value: 'main'
-      - name: git_sha
-        value: '7498b785266e5d7f6e088e54ee957805aad2e9e6'
-      - name: target_sha
-        value: '9b9fe2ccf311185717ac012cc86ec0c99b50fd6e'
       - name: container_tag
         value: 'stable'
-      - name: pull_request_url
-        value: 'https://github.com/sendible-labs/argo-workflows-ci-example/pull/1'
-      - name: pr_num
-        value: "1"
       - name: container_image
         value: "k3d-registry.localhost:5000/hello-world"
       - name: dockerfile

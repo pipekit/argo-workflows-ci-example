@@ -14,23 +14,52 @@ In order to make this a semi-usable example, we have cut a number of security co
 ## Prerequisites
 ### Running Locally
 In order to run this locally, you will need [k3d](https://k3d.io/) installed, as well as kubectl.
+### Running on a remote cluster
+The summary is "probably don't". If you really want to run on a remote cluster, you will need to use an empty cluster that you don't care about. This script blindly installs and configures a number of tools and has no regard for what you already have installed. It also makes assumptions about things like the container registry URL and ingress URLS that you will need to manually change in order to make it work.
+
+## Steps to Run
 ```
 chmod +x setup.sh
 ./setup.sh
 ```
-Once the setup is completed (3-7 mins), you can view the argo-workflows UI at https://localhost:8443/workflows/argo?limit=500 (the S in https is important and you'll need to accept the self-signed certificate). Make sure you are looking at the 'argo' namespace.
+Once the setup is completed (3-7 mins depending on how sprightly your cluster is feeling), you can view the argo-workflows UI at https://localhost:8443/workflows/argo?limit=500 (the S in https is important and you'll need to accept the self-signed certificate). Make sure you are looking at the 'argo' namespace.
 
 Then you can deploy the workflow and you should see it appear in the UI.
 ```
 kubectl -n argo create -f workflow.yml 
 ```
 
+Once the workflow has successfuly run, you can navigate to https://localhost:8443/argo-workflows-ci-example/ in your browser. The website should tell you the branch that it was built from (the default is 'example') and the name of the workflow that built it.
 
-### Running on a remote cluster
-You will need kubectl installed locally, with the appropriate configuration to allow you access to the cluster.
-You will need to use an empty cluster that you don't care about. This script blindly installs and configures a number of tools and has no regard for what you already have installed. If you're at all not sure, we recommend you use a local cluster instead.
+You can delete the Argocd CD application to remove the deployment:
+```
+kubectl -n argocd delete application final-application
+```
 
+IF you wish, you can modify the parameters in workflow.yml as follows and you'll build from our second example branch:
+```
+    parameters:
+      - name: app_repo
+        value: "argo-workflows-ci-example"
+      - name: git_branch
+        value: 'another-example'
+      - name: target_branch
+        value: 'main'
+      - name: git_sha
+        value: 'b5949deeadbd5d1ad0893b6ef5eac84ac2dab703'
+      - name: target_sha
+        value: '9b9fe2ccf311185717ac012cc86ec0c99b50fd6e'
+      - name: container_tag
+        value: 'stable'
+      - name: container_image
+        value: "k3d-registry.localhost:5000/hello-world"
+      - name: dockerfile
+        value: Dockerfile
+      - name: path
+        value: "/CI"
+```
 
+You can of course adjust other paramaters as you see fit, and keep running the workflows to experiment. You may need to change the final-application deployment.
 
 # Running in production
 This is a very simplified workflow aiming to highlight what's possible using Argo Workflows. Some things to consider when running in production:
