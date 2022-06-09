@@ -25,8 +25,6 @@ data:
         secondsAfterCompletion: 172800
       volumeClaimGC:
         strategy: OnWorkflowCompletion
-      podGC:
-        strategy: OnWorkflowCompletion
       retryStrategy:
         retryPolicy: OnError
         limit: 3

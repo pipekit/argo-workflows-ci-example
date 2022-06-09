@@ -29,7 +29,7 @@ spec:
       - name: pr_num
         value: "1"
       - name: container_image
-        value: "registry.localhost:5000/hello-world"
+        value: "localhost:5000/hello-world"
       - name: dockerfile
         value: Dockerfile
       - name: path
