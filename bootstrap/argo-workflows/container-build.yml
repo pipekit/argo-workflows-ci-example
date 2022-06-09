@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: container-build
+spec:
+  entrypoint: main
+  templates:
+  - name: main
+    dag:
+      tasks:
+        - name: container-build
+          template: container-build
+
+  - name: container-build
+    container:
+      image: gcr.io/kaniko-project/executor:debug
+      imagePullPolicy: Always
+      command: ['sh', '-c']
+      args:
+      - echo "Retrieving git clone..." && cp -R /workdir/{{workflow.parameters.app_repo}} /container-build
+
+        ls /container-build
+
+        echo "dockerfile = /container-build/{{workflow.parameters.app_repo}}{{workflow.parameters.path}}/{{workflow.parameters.dockerfile}}"
+
+        ls -lrt /container-build/{{workflow.parameters.app_repo}}{{workflow.parameters.path}}/
+
+        /kaniko/executor --dockerfile="/container-build/{{workflow.parameters.app_repo}}{{workflow.parameters.path}}/{{workflow.parameters.dockerfile}}" {{workflow.parameters.build_args}} --destination={{workflow.parameters.container_image}}:{{workflow.parameters.container_tag}} --context="dir:///container-build/{{workflow.parameters.app_repo}}/{{workflow.parameters.build_context}}" --cache=true --use-new-run=true --reproducible=true --push-retry=3
+      volumeMounts:
+        - name: container-build
+          mountPath: /container-build
+        - name: workdir
+          mountPath: /workdir
+      resources:
+        requests:
+          memory: 1Gi
+          cpu: 1
+      #20 minutes
+      activeDeadlineSeconds: 1200

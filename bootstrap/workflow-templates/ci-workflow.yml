@@ -57,12 +57,12 @@ spec:
         requests:
           storage: 1Gi
   volumes:
-  - name: unittest
+  - name: container-build
     emptyDir: {}
   arguments:
     parameters:
     - name: app_repo
-      value: "argo-workflows-ci-example"
+      value: ""
     - name: git_branch
       value: ""
     - name: target_branch
@@ -76,11 +76,11 @@ spec:
     - name: pull_request_url
       value: ''
     - name: container_image
-      value: "hello-world"
+      value: ""
     - name: dockerfile
-      value: "Dockerfile"
+      value: ""
     - name: path
-      value: "/CI/"
+      value: ""
     - name: pr_num
       value: ""
   templates:
@@ -96,3 +96,8 @@ spec:
               name: html-modifier
               template: main
             depends: git-checkout-pr
+          - name: container-build
+            templateRef:
+              name: container-build
+              template: main
+            depends: html-modifier
