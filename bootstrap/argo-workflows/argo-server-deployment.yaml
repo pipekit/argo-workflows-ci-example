@@ -10,3 +10,12 @@ spec:
         - server
         - --auth-mode=server
         name: argo-server
+        env:
+          - name: BASE_HREF
+            value: /
+          - name: FIRST_TIME_USER_MODAL
+            value: "false"
+          - name: FEEDBACK_MODAL
+            value: "false"
+          - name: NEW_VERSION_MODAL
+            value: "false"

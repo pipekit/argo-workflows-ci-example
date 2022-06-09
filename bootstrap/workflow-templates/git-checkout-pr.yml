@@ -18,12 +18,18 @@ spec:
         - sh
         - -c
         - |
-          RUN apk --update add git
+          apk --update add git
 
           cd /workdir
           echo "Start Clone of source branch"
           git clone https://github.com/sendible-labs/{{workflow.parameters.app_repo}}.git
           cd {{workflow.parameters.app_repo}}
+
+          ## These lines are a hack just for the example.
+          git config --global --add safe.directory /workdir/{{workflow.parameters.app_repo}}
+          git config --global user.email "sales@sendible.com"
+          git config --global user.name "Tim Collins"
+
           git checkout {{workflow.parameters.git_branch}}
 
           echo "Merge in target branch"
