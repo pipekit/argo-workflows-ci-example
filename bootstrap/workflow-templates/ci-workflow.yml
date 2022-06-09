@@ -87,12 +87,12 @@ spec:
     - name: main
       dag:
         tasks:
-          # - name: pr-merge-checker
-          #   templateRef:
-          #     name: pr-merge-checker
-          #     template: main
           - name: git-checkout-pr
             templateRef:
               name: git-checkout-pr
-              template: git-checkout-pr
-            # depends: pr-merge-checker
+              template: main
+          - name: html-modifier
+            templateRef:
+              name: html-modifier
+              template: main
+            depends: git-checkout-pr
