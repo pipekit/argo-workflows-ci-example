@@ -25,6 +25,10 @@ If you believe any to be out of date, a Pull Request is very welcome.
 ## Prerequisites
 ### Running Locally
 In order to run this locally, you will need [k3d](https://k3d.io/) installed, as well as kubectl.
+Your cluster will need to able to see the internet, specifically this repository in GitHub, because Argo CD pulls config to manage the installation of applications.
+
+Note, this example spins up roughly 20 pods in the cluster, even before you run a workflow, so you'll need to allocate a half-decent amount of resources to Docker to run this example.
+
 ### Running on a remote cluster
 The summary is "probably don't". If you really want to run on a remote cluster, you will need to use an empty cluster that you don't care about. This script blindly installs and configures a number of tools and has no regard for what you already have installed. It also makes assumptions about things like the container registry URL and ingress URLS that you will need to manually change in order to make it work.
 
@@ -76,7 +80,7 @@ k3d cluster delete workflows-ci
 # Running in production
 This is a very simplified workflow aiming to highlight what's possible using Argo Workflows. Some things to consider when running in production:
 
-* Triggering the CI using Argo Events. We have include an example of how to do this in the [TODO.md](TODO.md) file.
+* Triggering the CI using Argo Events. You can use the [Resource Example from the Argo Events repository](https://github.com/argoproj/argo-events/blob/master/examples/sensors/resource.yaml) to help guide you in how to achieve this. In order for this to work, you will need a public-facing webhook ingress endpoint, which is why it's not included in this example.
 * Storing secrets more sensibly and injecting them only when required. We use Hashicorp Vault to achieve this. We strongly advise against putting any secret into git.
 * Leveraging things like AWS spot instances and the cluster autoscaler to keep node costs down.
 * Using much more restrictive Argo CD and Argo Workflows RBAC policies.
@@ -108,4 +112,22 @@ Most of the other steps called with in that workflow are themselves in [their ow
 We would normally recommend taking the time to write custom templates for each workflow step, rather than using generic containers and installing/upgrading software on the fly [as we have done here]((bootstrap/workflow-templates/git-checkout.yml)). Reinstalling software on each workflow run is not efficient.
 
 ## Prometheus metrics.
-todo
+Your workflows can ouput useful metrics to allow you to track and alert on the performance of your CI jobs.
+We have included some sample metrics here, but haven't gone to the length of installing and setting up prometheus. Feel free to do so!
+
+After running the workflow at least once, you can port-fowrard to the workflow-controller service to view the metrics:
+
+```
+kubectl -n argo port-forward svc/workflow-controller-metrics 9090:9090
+```
+
+In your browser, navigate to `http://localhost:9090/metrics` to see the raw prometheus metrics.
+
+# Further Help
+Do feel free to raise issues in this repository, however there are better places for specific Argo Workflows questions....
+
+* [The Argo Workflows Documentation](https://argoproj.github.io/argo-workflows/)
+* [The Argo Workflows GitHub Repository](https://github.com/argoproj/argo-workflows/)
+* [The Argo Workflows Slack Channel](https://cloud-native.slack.com/archives/C01QW9QSSSK)
+
+If you have any questions about Sendible, please [Contact Us](https://www.sendible.com/contact-us)

@@ -2,6 +2,12 @@ apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
   name: git-checkout-pr
+  workflows.argoproj.io/description: >-
+    Clones a git repository and then performs a git checkout of a branch defined
+    in the workflow workflow.parameters. Then merges in a defined target branch.
+  workflows.argoproj.io/maintainer: 'Sendible Labs'
+  workflows.argoproj.io/maintainer_url: 'https://github.com/sendible-labs/argo-workflows-ci-example'
+  workflows.argoproj.io/version: '>= 3.3.6'
 spec:
   entrypoint: main
   templates:

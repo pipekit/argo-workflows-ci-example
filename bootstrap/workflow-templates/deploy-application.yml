@@ -2,6 +2,14 @@ apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
   name: deploy-application
+  annotations:
+    workflows.argoproj.io/description: >-
+      Leverages Argo Workflows' ability to interact directly with Kubernetes to deploy an Argo CD Application.
+      It monitors the health status of the application and is only considered 'done' once the Argo CD
+      Application reports itself as healthy.
+    workflows.argoproj.io/maintainer: 'Sendible Labs'
+    workflows.argoproj.io/maintainer_url: 'https://github.com/sendible-labs/argo-workflows-ci-example'
+    workflows.argoproj.io/version: '>= 3.3.6'
 spec:
   entrypoint: main
   templates:
