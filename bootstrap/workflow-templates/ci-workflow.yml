@@ -18,9 +18,7 @@ metadata:
     workflows.argoproj.io/maintainer: 'Sendible Labs'
     workflows.argoproj.io/maintainer_url: 'https://github.com/sendible-labs/argo-workflows-ci-example'
     workflows.argoproj.io/version: '>= 3.3.6'
-
 spec:
-
 # This is entirey optional. It allows us to use Prometheus to scrape the metrics from the argo Workflow Controller, and to measure the success of our CI.
   metrics:
     prometheus:
@@ -37,7 +35,6 @@ spec:
         gauge:
           value: "{{workflow.duration}}"
           realtime: false
-
       # If the workflow fails, we increase the Prometheus failure counter by 1.
       - name: result_counter
         help: "Count of step execution by result status"
@@ -51,7 +48,6 @@ spec:
         when: "{{status}} == Failed"
         counter:
           value: "1"
-
       # If the workflow succceeds, we increase the Prometheus succeeded counter by 1.
       - name: result_counter
         help: "Count of step execution by result status"
@@ -65,10 +61,7 @@ spec:
         when: "{{status}} == Succeeded"
         counter:
           value: "1"
-
-
   entrypoint: main
-
   # We request an NFS share (called 'workdir') so that we can pull the code, and maniuplate it across multiple nodes.
   # By the nature of the share, we would be able to access it from multiple nodes at the same time, allowing for parallel nodes.
   # We use nfs-server-provisioner for this, which uses disk on the Kubernetes node to provision the share. The PVCs are cleaned up when the workflow finishes.
@@ -86,7 +79,6 @@ spec:
   volumes:
   - name: container-build
     emptyDir: {}
-
 # You can set default paramaters here if you prefer. If you simply don't inject them when calling this template, the defaults will come through.
 # We default 'container_tag' to 'stable' here.
   arguments:
@@ -105,10 +97,8 @@ spec:
       value: ""
     - name: path
       value: ""
-
  # All the steps in this DAG are referencing external templates.
  # This allows us to re-use those templates in other workflows, and also makes this CI workflow quite tidy.
-
  # For reference we have also included a 'local' template (delete-application) to show that it's possible to mix-and-match local and external templates. 
   templates:
     - name: main
@@ -135,9 +125,8 @@ spec:
             depends: container-build
           - name: delete-application
             template: delete-application
-            depends: deploy-application.failure
-
-# This only runs if deploy-application fails. This allows us to ensure that we have a tidy environment for the next Workflow run.
+            depends: (deploy-application.Failed)
+    # This only runs if deploy-application fails. This allows us to ensure that we have a tidy environment for the next Workflow run.
     - name: delete-application
       resource:
         action: delete
