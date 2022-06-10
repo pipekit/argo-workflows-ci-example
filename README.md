@@ -11,6 +11,17 @@ A basic CI leveraging Argo Workflows.
 It does not pretend to be a definitive example, but it aims to inspire.
 In order to make this a semi-usable example, we have cut a number of security corners. Please don't just blindly run this in production.
 
+
+# Sofware Versions Used:
+This example installs a number of software packages:
+
+- Argo CD ('Stable' version... 2.2.4 at the time of writing)
+- Argo Workflows (3.3.6)
+- Ingress-Nginx (Helm Chart 4.1.2)
+- nfs-server-provisioner (Helm Chart 1.4.0)
+
+If you believe any to be out of date, a Pull Request is very welcome.
+
 ## Prerequisites
 ### Running Locally
 In order to run this locally, you will need [k3d](https://k3d.io/) installed, as well as kubectl.
@@ -74,6 +85,27 @@ This is a very simplified workflow aiming to highlight what's possible using Arg
 
 
 # So what's happening?
-todo
+## Setup
+After creating a new local cluster, we install Argo CD, which is configured to look at the [bootstrap/applications](bootstrap/applications/) directory to install all other other applications.
+
+Argo CD then continues to manage these applications, ensuring that your cluster reflects the configuration stored in Git.
+
+Argo CD also deploys all our workflow templates for us. This means we don't have to manage a complex release process for them. We simply get them to the main branch of git (either directly, or through a proper Pull Request process with reviews etc) and Argo CD handles the deployment.
+
+The [Argo Workflows Installation](bootstrap/argo-workflows/) is as out-of-the-box as we could make it while still providing an easy example. We adjust the controller config to ensure that Workflows releases PVCs when workflows are complete, as well as some other minor configuration for ease of demonstration. We patch the argo-server to disable a requirement for login, and to hide some popups that first-time users will see... again, all with the aim to make the example as smooth as possible.
+
+Finally, because we intend on using the Workflow to deploy an application into the 'argocd' namespace from the 'argo' namespace, we adjust the Kuberenetes rbac to allow the argo serviceaccount read/write access to the argocd namespace.
+
+ingress-nginx is installed purely to allow you to access the Argo Workflows UI and the UI of your final application.
+
+nfs-server-provisioner allows us to mount an NFS share into the workflow. This allows for multiple steps to interact with the same volume, even in parallel. nfs-server-provisioner uses disk on your nodes to achieve this. An alternative approach is to use Argo Workflows' archive feature to allow you to push data to a remote location such as S3.  For CI, this can be quite costly, pushing and pulling the data for each step in a workflow will not be efficient. Keeping the data as physically close to the compute as possible is a good idea.
+
+## Workflow Logistics
+The main workflow template that is being called is [ci-workflow.yaml](bootstrap/workflow-templates/ci-workflow.yml). This requests the appropriate volumes, optionally sets up some prometheus metrics and defines the actual DAG for the workflow.
+
+Most of the other steps called with in that workflow are themselves in [their own workflow template](bootstrap/workflow-templates/). This makes it easier for future expansion, and means you don't need to write a duplicate workflow for each CI job. In order for this to work, you should paramaterize as much as is sensibly possible within your workflow templates. We have done so here as an example, but there is probably room for improvement.
+
+We would normally recommend taking the time to write custom templates for each workflow step, rather than using generic containers and installing/upgrading software on the fly [as we have done here]((bootstrap/workflow-templates/git-checkout.yml)). Reinstalling software on each workflow run is not efficient.
+
 ## Prometheus metrics.
 todo

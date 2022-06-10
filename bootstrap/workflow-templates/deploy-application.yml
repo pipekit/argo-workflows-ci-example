@@ -14,7 +14,6 @@ spec:
   - name: deploy-application
     resource:
       action: create
-      # setOwnerReference: true
       successCondition: status.health.status == Healthy
       failureCondition: status.health.status == Degraded
       manifest: |
@@ -27,7 +26,6 @@ spec:
           namespace: argocd
         spec:
           destination:
-            name: ''
             namespace: final-application
             server: 'https://kubernetes.default.svc'
           project: default
