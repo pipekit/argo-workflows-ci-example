@@ -32,6 +32,8 @@ Note, this example spins up roughly 20 pods in the cluster, even before you run 
 ### Running on a remote cluster
 The summary is "probably don't". If you really want to run on a remote cluster, you will need to use an empty cluster that you don't care about. This script blindly installs and configures a number of tools and has no regard for what you already have installed. It also makes assumptions about things like the container registry URL and ingress URLS that you will need to manually change in order to make it work.
 
+You will need to remove the k3d cluster creation step from the script.
+
 ## Steps to Run
 ```
 chmod +x setup.sh
@@ -111,7 +113,7 @@ Most of the other steps called with in that workflow are themselves in [their ow
 
 We would normally recommend taking the time to write custom templates for each workflow step, rather than using generic containers and installing/upgrading software on the fly [as we have done here]((bootstrap/workflow-templates/git-checkout.yml)). Reinstalling software on each workflow run is not efficient.
 
-## Prometheus metrics.
+## Prometheus metrics
 Your workflows can ouput useful metrics to allow you to track and alert on the performance of your CI jobs.
 We have included some sample metrics here, but haven't gone to the length of installing and setting up prometheus. Feel free to do so!
 
