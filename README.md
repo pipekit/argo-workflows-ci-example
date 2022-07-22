@@ -15,9 +15,9 @@ In order to make this a semi-usable example, we have cut a number of security co
 # Sofware Versions Used:
 This example installs a number of software packages:
 
-- Argo CD ('Stable' version... 2.2.4 at the time of writing)
-- Argo Workflows (3.3.6)
-- Ingress-Nginx (Helm Chart 4.1.2)
+- Argo CD ('Stable' version... 2.4.7 at the time of writing)
+- Argo Workflows (3.3.8)
+- Ingress-Nginx (Helm Chart 4.2.0)
 - nfs-server-provisioner (Helm Chart 1.4.0)
 
 If you believe any to be out of date, a Pull Request is very welcome.
@@ -126,6 +126,12 @@ kubectl -n argo port-forward svc/workflow-controller-metrics 9090:9090
 In your browser, navigate to `http://localhost:9090/metrics` to see the raw prometheus metrics.
 
 # Further Help
+
+## Mac Users
+Monteray (MacOS 12) users might find that the k3d cluster doesn't start due to port 5000 being in use.
+It seems Apple has decided to automatically enable the Airplay Receiver option in the Sharing menu of System Preferences. You can either disable this, or change port 5000 in this repo to something else.
+
+## Other help
 Do feel free to raise issues in this repository, however there are better places for specific Argo Workflows questions....
 
 * [The Argo Workflows Documentation](https://argoproj.github.io/argo-workflows/)
