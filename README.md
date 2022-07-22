@@ -1,6 +1,8 @@
 # argo-workflows-ci-example
 A basic CI leveraging Argo Workflows.
 
+![CI Workflow Screenshot](assets/images/workflow-screenshot.png)
+
 ## The Workflow...
 * pulls a repo from git. Specifically pulling a branch based on a pull request;
 * merges the target branch into it;
@@ -19,6 +21,8 @@ This example installs a number of software packages:
 - Argo Workflows (3.3.8)
 - Ingress-Nginx (Helm Chart 4.2.0)
 - nfs-server-provisioner (Helm Chart 1.4.0)
+
+- Kubernetes 1.24.3
 
 If you believe any to be out of date, a Pull Request is very welcome.
 
