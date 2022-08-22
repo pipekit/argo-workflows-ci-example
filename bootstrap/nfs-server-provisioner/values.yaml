@@ -9,7 +9,7 @@ nfs-server-provisioner:
 
   image:
     repository: k8s.gcr.io/sig-storage/nfs-provisioner
-    tag: v3.0.0
+    tag: v3.0.1
     # digest:
     pullPolicy: IfNotPresent
 
