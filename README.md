@@ -19,7 +19,7 @@ This example installs a number of software packages:
 
 - Argo CD ('Stable' version... 2.4.7 at the time of writing)
 - Argo Workflows (3.3.9)
-- Ingress-Nginx (Helm Chart 4.2.1)
+- Ingress-Nginx (Helm Chart 4.2.2)
 - nfs-server-provisioner (Helm Chart 1.4.0)
 
 - Kubernetes 1.24.3
