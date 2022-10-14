@@ -17,12 +17,12 @@ In order to make this a semi-usable example, we have cut a number of security co
 # Sofware Versions Used:
 This example installs a number of software packages:
 
-- Argo CD ('Stable' version... 2.4.7 at the time of writing)
-- Argo Workflows (3.3.9)
+- Argo CD ('Stable' version... 2.4.14 at the time of writing)
+- Argo Workflows (3.4.0)
 - Ingress-Nginx (Helm Chart 4.3.0)
 - nfs-server-provisioner (Helm Chart 1.4.0)
 
-- Kubernetes 1.24.3
+- Kubernetes 1.25.2
 
 If you believe any to be out of date, a Pull Request is very welcome.
 
