@@ -5,7 +5,7 @@ k3d cluster create --config bootstrap/k3d.conf
 # Prevent users from accidentally deploying to the wrong cluster.
 currentContext=$(kubectl config current-context)
 if [ "$currentContext" == "k3d-workflows-ci" ]; then
-    echo "Starting deployment to cluister..."
+    echo "Starting deployment to cluster..."
 else
     echo "The kubectl context is not what we expected. Exiting for safety. Perhaps the k3d cluster failed to create?"
     exit 1
