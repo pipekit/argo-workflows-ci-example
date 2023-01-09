@@ -132,7 +132,7 @@ In your browser, navigate to `http://localhost:9090/metrics` to see the raw prom
 # Further Help
 
 ## Mac Users
-Monteray (MacOS 12) users might find that the k3d cluster doesn't start due to port 5000 being in use.
+Monteray (MacOS 12) and greater users might find that the k3d cluster doesn't start due to port 5000 being in use.
 It seems Apple has decided to automatically enable the Airplay Receiver option in the Sharing menu of System Preferences. You can either disable this, or change port 5000 in this repo to something else.
 
 ## Other help
@@ -142,4 +142,4 @@ Do feel free to raise issues in this repository, however there are better places
 * [The Argo Workflows GitHub Repository](https://github.com/argoproj/argo-workflows/)
 * [The Argo Workflows Slack Channel](https://cloud-native.slack.com/archives/C01QW9QSSSK)
 
-If you have any questions about Sendible, please [Contact Us](https://www.sendible.com/contact-us)
+Thank you to the [Sendible](https://www.sendible.com) for their outsized contributions to this repository.
