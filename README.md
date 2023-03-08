@@ -76,7 +76,7 @@ If you wish, you can modify the parameters in workflow.yml as follows and you'll
         value: "/CI"
 ```
 
-You can of course adjust other paramaters as you see fit, and keep running the workflows to experiment. You may need to change the final-application deployment.
+You can of course adjust other parameters as you see fit, and keep running the workflows to experiment. You may need to change the final-application deployment.
 
 # Deleting the cluster
 ```
