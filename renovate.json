@@ -4,6 +4,6 @@
     "config:base"
   ],
   "kubernetes": {
-    "fileMatch": ["\\.yaml$", "\\.yml$"]
+    "fileMatch": ["\\.yaml$", "\\.yml$", "\\.conf$"]
   }
 }
