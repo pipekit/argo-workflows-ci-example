@@ -19,12 +19,11 @@ In order to make this a semi-usable example, we have cut a number of security co
 # Software Versions Used:
 This example installs a number of software packages:
 
-- Argo CD ('Stable' version... 2.4.14 at the time of writing)
+- Argo CD (2.6.7)
 - Argo Workflows (3.4.5)
-- Ingress-Nginx (Helm Chart 4.4.2)
-- nfs-server-provisioner (Helm Chart 1.4.0)
-
-- Kubernetes 1.25.2
+- Ingress-Nginx (Helm Chart 4.6.0)
+- nfs-server-provisioner (Helm Chart 1.8.0)
+- Kubernetes 1.26
 
 If you believe any to be out of date, a Pull Request is very welcome.
 
@@ -106,7 +105,7 @@ Argo CD also deploys all our workflow templates for us. This means we don't have
 
 The [Argo Workflows Installation](bootstrap/argo-workflows/) is as out-of-the-box as we could make it while still providing an easy example. We adjust the controller config to ensure that Workflows releases PVCs when workflows are complete, as well as some other minor configuration for ease of demonstration. We patch the argo-server to disable a requirement for login, and to hide some popups that first-time users will see... again, all with the aim to make the example as smooth as possible.
 
-Finally, because we intend on using the Workflow to deploy an application into the 'argocd' namespace from the 'argo' namespace, we adjust the Kubernetes rbac to allow the argo serviceaccount read/write access to the argocd namespace.
+Finally, because we intend on using the Workflow to deploy an application into the 'argocd' namespace from the 'argo' namespace, we adjust the Kubernetes rbac to allow the argo serviceAccount read/write access to the argocd namespace.
 
 ingress-nginx is installed purely to allow you to access the Argo Workflows UI and the UI of your final application.
 
