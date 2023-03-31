@@ -1,7 +1,8 @@
 [![Pipekit Logo](assets/images/pipekit-logo.png)](https://pipekit.io)
 
-# Argo Workflow - Example CI
-A basic CI leveraging Argo Workflows.
+
+# Argo Workflows - Example CI
+A basic CI leveraging [Argo Workflows](https://argoproj.github.io/argo-workflows/).
 
 ![CI Workflow Screenshot](assets/images/workflow-screenshot.png)
 
@@ -130,20 +131,20 @@ kubectl -n argo port-forward svc/workflow-controller-metrics 9090:9090
 
 In your browser, navigate to `http://localhost:9090/metrics` to see the raw prometheus metrics.
 
-# Further Help
+# Further Help and Support
 
 ## Mac Users
 Monteray (MacOS 12) and greater users might find that the k3d cluster doesn't start due to port 5000 being in use.
 It seems Apple has decided to automatically enable the Airplay Receiver option in the Sharing menu of System Preferences. You can either disable this, or change port 5000 in this repo to something else.
 
-## Other help
+## Argo Workflows Support
 Do feel free to raise issues in this repository, however there are better places for specific Argo Workflows questions....
 
 * [The Argo Workflows Documentation](https://argoproj.github.io/argo-workflows/)
 * [The Argo Workflows GitHub Repository](https://github.com/argoproj/argo-workflows/)
 * [The Argo Workflows Slack Channel](https://cloud-native.slack.com/archives/C01QW9QSSSK)
 
-[Pipekit](pipekit.io) allows you to manage your workflows at scale. The control plane configures Argo Workflows for you in your infrastructure, enabling you to optimize multi-cluster workloads while reducing your cloud spend. 
+[Pipekit](pipekit.io) allows you to manage your workflows at scale. The control plane configures Argo Workflows for you in your infrastructure, enabling you to optimize multi-cluster workloads while reducing your cloud spend.  The team at Pipekit is also happy to support you through your Argo Workflows journey.
 
-## Acknowledgements
+# Acknowledgements
 Thank you to the [Sendible](https://www.sendible.com) for their outsized contributions to this repository.
