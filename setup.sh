@@ -12,6 +12,7 @@ else
 fi
 
 # Deploy Argo CD, which in turn deploys everything else
+kubectl -n kube-system rollout status deployment/metrics-server
 kubectl apply -k bootstrap/argocd
 kubectl -n argocd rollout status statefulset/argocd-application-controller
 kubectl -n argocd rollout status deployment/argocd-repo-server
