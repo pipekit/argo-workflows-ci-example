@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
  # https://github.com/argoproj/argo-workflows/
  # renovate: datasource=github-releases depName=argoproj/argo-workflows
-- https://github.com/argoproj/argo-workflows/releases/download/v3.4.5/install.yaml
+- https://github.com/argoproj/argo-workflows/releases/download/v3.4.6/install.yaml
 - ingress.yaml
 - rolebinding.yml
 
