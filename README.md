@@ -146,7 +146,7 @@ Do feel free to raise issues in this repository, however there are better places
 * [The Argo Workflows GitHub Repository](https://github.com/argoproj/argo-workflows/)
 * [The Argo Workflows Slack Channel](https://cloud-native.slack.com/archives/C01QW9QSSSK)
 
-[Pipekit](pipekit.io) allows you to manage your workflows at scale. The control plane configures Argo Workflows for you in your infrastructure, enabling you to optimize multi-cluster workloads while reducing your cloud spend.  The team at Pipekit is also happy to support you through your Argo Workflows journey.
+[Pipekit](pipekit.io) allows you to manage your workflows at scale. The control plane configures Argo Workflows for you in your infrastructure, enabling you to optimize multi-cluster workloads while reducing your cloud spend.  The team at Pipekit is also happy to support you through your Argo Workflows journey via commercial support.
 
 # Acknowledgements
 Thank you to the [Sendible](https://www.sendible.com) for their outsized contributions to this repository.
