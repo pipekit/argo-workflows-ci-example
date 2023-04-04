@@ -6,6 +6,8 @@ A basic CI leveraging [Argo Workflows](https://argoproj.github.io/argo-workflows
 
 ![CI Workflow Screenshot](assets/images/workflow-screenshot.png)
 
+![Deployed Application Screenshot](assets/images/deployed-app-screenshot.png)
+
 ## The Workflow...
 * pulls a repo from git. Specifically pulling a branch based on a pull request;
 * merges the target branch into it;
