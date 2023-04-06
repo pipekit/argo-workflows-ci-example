@@ -50,5 +50,5 @@ spec:
         requests:
           memory: 250Mi
           cpu: 4m
-      #20 minutes
-      activeDeadlineSeconds: 1200
+    #20 minutes
+    activeDeadlineSeconds: 1200

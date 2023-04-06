@@ -35,5 +35,5 @@ spec:
         requests:
           memory: 1Gi
           cpu: 1
-      #20 minutes
-      activeDeadlineSeconds: 1200
+    #20 minutes
+    activeDeadlineSeconds: 1200
