@@ -30,3 +30,15 @@ data:
         limit: 3
       serviceAccountName: argo
 
+  artifactRepository: |
+    archiveLogs: true
+    s3:
+      bucket: workflows
+      endpoint: minio.minio.svc.cluster.local:9000
+      insecure: true
+      accessKeySecret:
+        name: minio-creds
+        key: accesskey
+      secretKeySecret:
+        name: minio-creds
+        key: secretkey

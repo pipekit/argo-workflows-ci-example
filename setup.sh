@@ -25,5 +25,6 @@ kubectl -n ingress-nginx rollout status deployment/nginx-ingress-nginx-controlle
 kubectl -n ingress-nginx rollout status daemonset/svclb-nginx-ingress-nginx-controller
 kubectl -n argo rollout status deployment/workflow-controller
 kubectl -n argo rollout status deployment/argo-server
+kubectl -n minio rollout status deployment/minio
 
 echo "Complete. You should be able to navigate to https://localhost:8443/workflows/argo?limit=500 in your browser now. (Remember to accept the self-signed SSL cert)."

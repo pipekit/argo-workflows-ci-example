@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: minio
+    app.kubernetes.io/component: minio
+  name: minio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+        app.kubernetes.io/component: minio
+    spec:
+      containers:
+      - command:
+        - /bin/sh
+        - -ce
+        - /usr/bin/docker-entrypoint.sh minio -S /etc/minio/certs/ server --console-address :9001 /export
+        env:
+        - name: MINIO_ROOT_USER
+          value: "pipekit"
+        - name: MINIO_ROOT_PASSWORD
+          value: "sup3rs3cr3tp4ssw0rd1"
+        image: minio/minio:RELEASE.2022-10-05T14-58-27Z
+        imagePullPolicy: Always
+        name: minio
+        ports:
+        - containerPort: 9000
+          name: http
+          protocol: TCP
+        - containerPort: 9001
+          name: console
+          protocol: TCP
+        resources:
+          requests:
+            memory: 512Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File

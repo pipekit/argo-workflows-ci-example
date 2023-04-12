@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: minio
+    app.kubernetes.io/component: minio
+  name: minio
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 9000
+    protocol: TCP
+    targetPort: 9000
+    nodePort: 30001
+  - name: console
+    port: 9001
+    protocol: TCP
+    targetPort: 9001
+    nodePort: 30002
+  selector:
+    app: minio

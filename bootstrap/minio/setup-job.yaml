@@ -1,0 +1,51 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minio-job
+  labels:
+    app: minio-job
+    app.kubernetes.io/component: minio
+spec:
+  activeDeadlineSeconds: 600
+  backoffLimit: 2
+  template:
+    metadata:
+      labels:
+        app: minio-job
+        app.kubernetes.io/component: minio
+    spec:
+      restartPolicy: OnFailure
+      volumes:
+        - name: minio-configuration
+          projected:
+            sources:
+            - configMap:
+                name: minio-config
+      serviceAccountName: minio-job
+      containers:
+      - name: minio-mc
+        image: "minio/mc:RELEASE.2022-10-06T01-20-06Z"
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/sh", "/config/initialize"]
+        env:
+          - name: MINIO_ENDPOINT
+            value: minio.minio.svc.cluster.local
+          - name: MINIO_PORT
+            value: "9000"
+        volumeMounts:
+          - name: minio-configuration
+            mountPath: /config
+        resources:
+          requests:
+            memory: 128Mi
+      initContainers:
+        - name: waitforminio
+          image: groundnuty/k8s-wait-for:v2.0
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+          args:
+            - "pod"
+            - "-lapp=minio"
+            - "-n minio"
