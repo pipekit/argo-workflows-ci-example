@@ -145,7 +145,7 @@ kubectl -n argo create -f workflow-s3.yml
 # Further Help and Support
 
 ## Mac Users
-Monteray (MacOS 12) and greater users might find that the k3d cluster doesn't start due to port 5000 being in use.
+Monterey (MacOS 12) and greater users might find that the k3d cluster doesn't start due to port 5000 being in use.
 It seems Apple has decided to automatically enable the Airplay Receiver option in the Sharing menu of System Preferences. You can either disable this, or change port 5000 in this repo to something else.
 
 ## Argo Workflows Support
