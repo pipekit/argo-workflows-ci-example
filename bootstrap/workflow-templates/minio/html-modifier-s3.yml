@@ -1,0 +1,51 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: html-modifier-s3
+  annotations:
+    workflows.argoproj.io/description: >-
+      Performs a sed command to inject the current running Workflow name into a given file.
+    workflows.argoproj.io/maintainer: 'Pipekit Inc'
+    workflows.argoproj.io/maintainer_url: 'https://github.com/pipekit/argo-workflows-ci-example'
+    workflows.argoproj.io/version: '>= 3.3.6'
+spec:
+  entrypoint: main
+  templates:
+    - name: main
+      dag:
+        tasks:
+          - name: html-modifier
+            template: html-modifier
+
+    - name: html-modifier
+      inputs:
+        artifacts:
+          - name: git_repo
+            path: /tmp/{{workflow.parameters.app_repo}}
+      container:
+        image: ubuntu:latest
+        command:
+          - /bin/bash
+          - -c
+          - |
+            cd /tmp/{{workflow.parameters.app_repo}}/CI
+
+            if grep -q CHANGEMEPLEASE index.html; then
+              cat index.html | sed -E 's/CHANGEMEPLEASE/{{workflow.name}}/g' > tmp_index.html
+              mv tmp_index.html index.html
+            else
+              echo "CHANGEMEPLEASE was not found in index.html. Exiting"
+              exit 1
+            fi
+
+            cat index.html
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 100m
+      outputs:
+        artifacts:
+          - name: modified_git_repo
+            path: /tmp/{{workflow.parameters.app_repo}}
+      #20 minutes
+      activeDeadlineSeconds: 1200

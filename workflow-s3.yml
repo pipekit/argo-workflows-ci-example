@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: ci-workflow-s3-
+  namespace: argo
+  labels:
+    workflows.argoproj.io/workflow-template: ci-workflow-s3
+spec:
+  arguments:
+    parameters:
+      - name: app_repo
+        value: "argo-workflows-ci-example"
+      - name: git_branch
+        value: 'example'
+      - name: target_branch
+        value: 'main'
+      - name: container_tag
+        value: 'stable'
+      - name: container_image
+        value: "k3d-registry.localhost:5000/hello-world"
+      - name: dockerfile
+        value: Dockerfile
+      - name: path
+        value: "/CI"
+  workflowTemplateRef:
+    name: ci-workflow-s3

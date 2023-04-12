@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
-  name: ci-workflow
+  name: ci-workflow-s3
   annotations:
     workflows.argoproj.io/description: >-
       A basic CI leveraging Argo Workflows.
@@ -62,41 +62,23 @@ spec:
         counter:
           value: "1"
   entrypoint: main
-  # We request an NFS share (called 'workdir') so that we can pull the code, and manipulate it across multiple nodes.
-  # By the nature of the share, we would be able to access it from multiple nodes at the same time, allowing for parallel nodes.
-  # We use nfs-server-provisioner for this, which uses disk on the Kubernetes node to provision the share. The PVCs are cleaned up when the workflow finishes.
-  volumeClaimTemplates:
-  - metadata:
-      name: workdir
-    spec:
-      accessModes: [ "ReadWriteMany" ]
-      storageClassName: nfs
-      resources:
-        requests:
-          storage: 1Gi
-  # The container build step copies the code from the NFS share to this ephemeral volume, and then runs the build.
-  # We do this a) because NFS shares are slow and b) to allow us to run another workflow step alongside the build if we wish.
-  volumes:
-  - name: container-build
-    emptyDir: {}
 # You can set default parameters here if you prefer. If you simply don't inject them when calling this template, the defaults will come through.
 # We default 'container_tag' to 'stable' here.
-  arguments:
-    parameters:
+  parameters:
     - name: app_repo
-      value: ""
+      value: "argo-workflows-ci-example"
     - name: git_branch
-      value: ""
+      value: 'example'
     - name: target_branch
-      value: ""
+      value: 'main'
     - name: container_tag
-      value: "stable"
+      value: 'stable'
     - name: container_image
-      value: ""
+      value: "k3d-registry.localhost:5000/hello-world"
     - name: dockerfile
-      value: ""
+      value: Dockerfile
     - name: path
-      value: ""
+      value: "/CI"
  # All the steps in this DAG are referencing external templates.
  # This allows us to re-use those templates in other workflows, and also makes this CI workflow quite tidy.
  # For reference we have also included a 'local' template (delete-application) to show that it's possible to mix-and-match local and external templates. 
@@ -104,25 +86,33 @@ spec:
     - name: main
       dag:
         tasks:
-          - name: git-checkout-pr
+          - name: git-checkout-pr-s3
             templateRef:
-              name: git-checkout-pr
-              template: main
-          - name: html-modifier
+              name: git-checkout-pr-s3
+              template: git-checkout-pr
+          - name: html-modifier-s3
             templateRef:
-              name: html-modifier
-              template: main
-            depends: git-checkout-pr
-          - name: container-build
+              name: html-modifier-s3
+              template: html-modifier
+            arguments:
+              artifacts:
+                - name: git_repo
+                  from: "{{tasks.git-checkout-pr-s3.outputs.artifacts.git_repo}}"
+            depends: git-checkout-pr-s3
+          - name: container-build-s3
             templateRef:
-              name: container-build
-              template: main
-            depends: html-modifier
+              name: container-build-s3
+              template: container-build
+            arguments:
+              artifacts:
+                - name: modified_git_repo
+                  from: "{{tasks.html-modifier-s3.outputs.artifacts.modified_git_repo}}"
+            depends: html-modifier-s3
           - name: deploy-application
             templateRef:
               name: deploy-application
               template: main
-            depends: container-build
+            depends: container-build-s3
           - name: delete-application
             template: delete-application
             depends: (deploy-application.Failed)

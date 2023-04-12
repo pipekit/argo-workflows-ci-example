@@ -133,6 +133,15 @@ kubectl -n argo port-forward svc/workflow-controller-metrics 9090:9090
 
 In your browser, navigate to `http://localhost:9090/metrics` to see the raw prometheus metrics.
 
+## Using S3/Minio instead of NFS
+Some people may choose to use s3 instead of NFS. This is possible, and we have written an example into this repo.
+
+You can run the following command to trigger the same workflow, using minio to pass the artifacts between steps.
+
+```
+kubectl -n argo create -f workflow-s3.yml 
+```
+
 # Further Help and Support
 
 ## Mac Users

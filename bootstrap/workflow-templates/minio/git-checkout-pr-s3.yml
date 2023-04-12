@@ -1,0 +1,55 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: git-checkout-pr-s3
+  annotations:
+    workflows.argoproj.io/description: >-
+      Clones a git repository and then performs a git checkout of a branch defined
+      in the workflow workflow.parameters. Then merges in a defined target branch.
+    workflows.argoproj.io/maintainer: 'Pipekit Inc'
+    workflows.argoproj.io/maintainer_url: 'https://github.com/pipekit/argo-workflows-ci-example'
+    workflows.argoproj.io/version: '>= 3.3.6'
+spec:
+  entrypoint: main
+  templates:
+  - name: main
+    dag:
+      tasks:
+        - name: git-checkout-pr
+          template: git-checkout-pr
+
+  - name: git-checkout-pr
+    container:
+      image: alpine:latest
+      command:
+        - sh
+        - -c
+        - |
+          apk --update add git
+
+          cd /tmp
+          echo "Start Clone of source branch"
+          git clone https://github.com/pipekit/{{workflow.parameters.app_repo}}.git
+          cd {{workflow.parameters.app_repo}}
+
+          ## These lines are a hack just for the example.
+          git config --global --add safe.directory /tmp/{{workflow.parameters.app_repo}}
+          git config --global user.email "sales@pipekit.io"
+          git config --global user.name "Tim Collins"
+
+          git checkout {{workflow.parameters.git_branch}}
+
+          echo "Merge in target branch"
+          git merge origin/{{workflow.parameters.target_branch}}
+
+          echo "Complete."
+      resources:
+        requests:
+          memory: 250Mi
+          cpu: 4m
+    outputs:
+      artifacts:
+        - name: git_repo
+          path: /tmp/{{workflow.parameters.app_repo}}
+    #20 minutes
+    activeDeadlineSeconds: 1200
