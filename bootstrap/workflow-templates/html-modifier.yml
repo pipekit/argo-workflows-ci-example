@@ -39,9 +39,9 @@ spec:
         volumeMounts:
           - name: workdir
             mountPath: /workdir
-      resources:
-        requests:
-          memory: 256Mi
-          cpu: 100m
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 100m
       #20 minutes
       activeDeadlineSeconds: 1200
