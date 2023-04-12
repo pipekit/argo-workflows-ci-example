@@ -13,7 +13,8 @@ spec:
     path: bootstrap/workflow-templates
     repoURL: 'https://github.com/pipekit/argo-workflows-ci-example.git'
     targetRevision: HEAD
-    recursive: true
+    directory:
+      recurse: true
   project: default
   syncPolicy:
     automated:
