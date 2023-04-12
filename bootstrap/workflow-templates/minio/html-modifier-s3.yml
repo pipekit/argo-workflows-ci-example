@@ -31,7 +31,7 @@ spec:
             cd /tmp/{{workflow.parameters.app_repo}}/CI
 
             if grep -q CHANGEMEPLEASE index.html; then
-              cat index.html | sed -E 's/CHANGEMEPLEASE/{{workflow.name}}/g' > tmp_index.html
+              cat index.html | sed -E 's/CHANGEMEPLEASE/{{workflow.name}} and it used minio for artifact passing./g' > tmp_index.html
               mv tmp_index.html index.html
             else
               echo "CHANGEMEPLEASE was not found in index.html. Exiting"
