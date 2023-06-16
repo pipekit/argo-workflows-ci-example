@@ -22,7 +22,7 @@ In order to make this a semi-usable example, we have cut a number of security co
 # Software Versions Used:
 This example installs a number of software packages:
 
-- Argo CD (2.7.4)
+- Argo CD (2.7.5)
 - Argo Workflows (3.4.8)
 - Ingress-Nginx (Helm Chart 4.6.0)
 - nfs-server-provisioner (Helm Chart 1.8.0)
