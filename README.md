@@ -26,7 +26,7 @@ This example installs a number of software packages:
 - Argo Workflows (3.4.11)
 - Ingress-Nginx (Helm Chart 4.8.0)
 - nfs-server-provisioner (Helm Chart 1.8.0)
-- Kubernetes 1.26
+- Kubernetes 1.27
 
 If you believe any to be out of date, a Pull Request is very welcome.
 
