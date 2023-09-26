@@ -22,9 +22,9 @@ In order to make this a semi-usable example, we have cut a number of security co
 # Software Versions Used:
 This example installs a number of software packages:
 
-- Argo CD (2.7.5)
-- Argo Workflows (3.4.8)
-- Ingress-Nginx (Helm Chart 4.6.0)
+- Argo CD (2.8.4)
+- Argo Workflows (3.4.11)
+- Ingress-Nginx (Helm Chart 4.8.0)
 - nfs-server-provisioner (Helm Chart 1.8.0)
 - Kubernetes 1.26
 
@@ -51,7 +51,7 @@ Once the setup is completed (3-7 mins depending on how sprightly your cluster is
 
 Then you can deploy the workflow and you should see it appear in the UI.
 ```
-kubectl -n argo create -f workflow.yml 
+kubectl -n argo create -f workflow.yml
 ```
 
 Once the workflow has successfully run, you can navigate to https://localhost:8443/argo-workflows-ci-example/ in your browser. The website should tell you the branch that it was built from (the default is 'example') and the name of the workflow that built it.
@@ -139,7 +139,7 @@ Some people may choose to use s3 instead of NFS. This is possible, and we have w
 You can run the following command to trigger the same workflow, using minio to pass the artifacts between steps.
 
 ```
-kubectl -n argo create -f workflow-s3.yml 
+kubectl -n argo create -f workflow-s3.yml
 ```
 
 # Further Help and Support
