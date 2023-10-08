@@ -24,7 +24,7 @@ spec:
       serviceAccountName: minio-job
       containers:
       - name: minio-mc
-        image: "minio/mc:RELEASE.2022-10-06T01-20-06Z"
+        image: "minio/mc:RELEASE.2023-10-04T06-52-56Z"
         imagePullPolicy: IfNotPresent
         command: ["/bin/sh", "/config/initialize"]
         env:
