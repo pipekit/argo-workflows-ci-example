@@ -48,7 +48,7 @@ You will need to remove the k3d cluster creation step from the script.
 chmod +x setup.sh
 ./setup.sh
 ```
-Once the setup is completed (3-7 mins depending on how sprightly your local machine is feeling), you can view the argo-workflows UI at https://localhost:8443/argo/workflows/argo?limit=500 (the S in https is important and you'll need to accept the self-signed certificate). Make sure you are looking at the 'argo' namespace.
+Once the setup is completed (3-7 mins depending on how sprightly your local machine is feeling), you can view the argo-workflows UI at https://localhost:8443/argo/workflows/argo (the S in https is important and you'll need to accept the self-signed certificate). Make sure you are looking at the 'argo' namespace.
 
 Then you can deploy the workflow and you should see it appear in the UI.
 ```
