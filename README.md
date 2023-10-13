@@ -22,11 +22,12 @@ In order to make this a semi-usable example, we have cut a number of security co
 # Software Versions Used:
 This example installs a number of software packages:
 
-- Argo CD (2.8.4)
-- Argo Workflows (3.4.11)
-- Ingress-Nginx (Helm Chart 4.8.0)
-- nfs-server-provisioner (Helm Chart 1.8.0)
-- Kubernetes 1.28
+- Argo CD
+- Argo Workflows
+- Ingress-Nginx
+- Minio
+- nfs-server-provisioner
+- Kubernetes
 
 If you believe any to be out of date, a Pull Request is very welcome.
 
