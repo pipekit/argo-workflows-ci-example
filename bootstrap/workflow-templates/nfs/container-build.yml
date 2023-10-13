@@ -33,7 +33,7 @@ spec:
           context=/container-build/{{workflow.parameters.app_repo}}{{workflow.parameters.path}} \
           --local \
           dockerfile=/container-build/{{workflow.parameters.app_repo}}{{workflow.parameters.path}} \
-          --opt filename={{inputs.parameters.dockerfile}} \
+          --opt filename={{workflow.parameters.dockerfile}} \
           --output \
           type=image,name={{workflow.parameters.container_image}}:{{workflow.parameters.container_tag}},push=true
       env:
