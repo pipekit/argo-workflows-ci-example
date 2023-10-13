@@ -100,6 +100,8 @@ The main workflow template that is being called is [ci-workflow.yaml](bootstrap/
 
 Most of the other steps called with in that workflow are themselves in [their own workflow template](bootstrap/workflow-templates/). This makes it easier for future expansion, and means you don't need to write a duplicate workflow for each CI job. In order for this to work, you should parametrise as much as is sensibly possible within your workflow templates. We have done so here as an example, but there is probably room for improvement.
 
+The docker container build is performed by [Buildkit](https://github.com/moby/buildkit), but we offer a [Kaniko](https://github.com/GoogleContainerTools/kaniko)-based workflow template if you want to use that instead. You can challenge yourself by swapping the Buildkit workflow template for the Kaniko one. We have found Buildkit to be marginally more performant than Kaniko in real-world testing, but your mileage may vary depending on your use case.
+
 We would normally recommend taking the time to write custom templates for each workflow step, rather than using generic containers and installing/upgrading software on the fly [as we have done here]((bootstrap/workflow-templates/git-checkout.yml)). Reinstalling software on each workflow run is not efficient.
 
 ## Prometheus metrics
