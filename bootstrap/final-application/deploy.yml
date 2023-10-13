@@ -1,4 +1,4 @@
-apiVersion: apps/v1 
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: example-application
@@ -61,12 +61,12 @@ spec:
   - host: localhost
     http:
       paths:
-      - path: /argo-workflows-ci-example/(.*)
+      - path: /workflows-ci-example/(.*)
         pathType: Prefix
         backend:
-          service: 
+          service:
             name: example-application
-            port: 
+            port:
               number: 80
   tls:
   - hosts:

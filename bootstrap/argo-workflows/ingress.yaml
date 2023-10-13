@@ -5,18 +5,20 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/use-regex: 'true'
 spec:
   ingressClassName: nginx
   rules:
   - host: localhost
     http:
       paths:
-      - path: /
+      - path: /argo(/|$)(.*)
         pathType: ImplementationSpecific
         backend:
-          service: 
+          service:
             name: argo-server
-            port: 
+            port:
               name: web
   tls:
   - hosts:
