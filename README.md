@@ -25,7 +25,6 @@ This example installs a number of software packages:
 - Argo CD
 - Argo Workflows
 - Ingress-Nginx
-- Minio
 - nfs-server-provisioner
 - Kubernetes
 

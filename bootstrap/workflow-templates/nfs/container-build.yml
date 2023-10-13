@@ -35,7 +35,7 @@ spec:
           dockerfile=/container-build/{{workflow.parameters.app_repo}}{{workflow.parameters.path}} \
           --opt filename={{workflow.parameters.dockerfile}} \
           --output \
-          type=image,name={{workflow.parameters.container_image}}:{{workflow.parameters.container_tag}},push=true
+          type=image,name={{workflow.parameters.container_image}}:{{workflow.parameters.container_tag}},push=true,registry.insecure=true
       env:
         - name: BUILDKITD_FLAGS
           value: --oci-worker-no-process-sandbox
