@@ -48,7 +48,7 @@ You will need to remove the k3d cluster creation step from the script.
 chmod +x setup.sh
 ./setup.sh
 ```
-Once the setup is completed (3-7 mins depending on how sprightly your cluster is feeling), you can view the argo-workflows UI at https://localhost:8443/workflows/argo?limit=500 (the S in https is important and you'll need to accept the self-signed certificate). Make sure you are looking at the 'argo' namespace.
+Once the setup is completed (3-7 mins depending on how sprightly your local machine is feeling), you can view the argo-workflows UI at https://localhost:8443/workflows/argo?limit=500 (the S in https is important and you'll need to accept the self-signed certificate). Make sure you are looking at the 'argo' namespace.
 
 Then you can deploy the workflow and you should see it appear in the UI.
 ```
@@ -95,7 +95,7 @@ This is a very simplified workflow aiming to highlight what's possible using Arg
 * Storing secrets more sensibly and injecting them only when required. We use Hashicorp Vault to achieve this. We strongly advise against putting any secret into git.
 * Leveraging things like AWS spot instances and the cluster autoscaler to keep node costs down.
 * Using much more restrictive Argo CD and Argo Workflows RBAC policies.
-* Using something like the [ci-github-notifier](https://github.com/sendible-labs/ci-github-notifier) to annotate pull requests and branches with the status of your CI.
+* Using something like the [ci-github-notifier](https://github.com/crumbhole/ci-github-notifier) to annotate pull requests and branches with the status of your CI.
 * Use dedicated images for the job. Don't pull alpine and install git on each run, use a custom alpine-git image. We just did the example this way to reduce the number of dependencies required to get up and running.
 
 
@@ -159,4 +159,4 @@ Do feel free to raise issues in this repository, however there are better places
 [Pipekit](pipekit.io) allows you to manage your workflows at scale. The control plane configures Argo Workflows for you in your infrastructure, enabling you to optimize multi-cluster workloads while reducing your cloud spend.  The team at Pipekit is also happy to support you through your Argo Workflows journey via commercial support.
 
 # Acknowledgements
-Thank you to the [Sendible](https://www.sendible.com) for their outsized contributions to this repository.
+Thank you to [Sendible](https://www.sendible.com) for their outsized contributions to this repository.
