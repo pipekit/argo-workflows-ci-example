@@ -9,7 +9,7 @@ A basic CI leveraging [Argo Workflows](https://argoproj.github.io/argo-workflows
 ![Deployed Application Screenshot](assets/images/deployed-app-screenshot.png)
 
 ## The Workflow...
-* pulls a repo from git. Specifically pulling a branch based on a pull request;
+* pulls a repo from git. Specifically simulating pulling a branch based on a pull request;
 * merges the target branch into it;
 * modifies the html that will be copied into the container to inject the unique name of the running workflow;
 * builds a container from a Dockerfile and pushes to a registry;
@@ -60,25 +60,6 @@ Once the workflow has successfully run, you can navigate to https://localhost:84
 You can delete the Argo CD application to remove the deployment. You should do this before re-running the workflow:
 ```
 kubectl -n argocd delete application final-application
-```
-
-If you wish, you can modify the parameters in workflow.yml as follows and you'll build from our second example branch:
-```
-    parameters:
-      - name: app_repo
-        value: "argo-workflows-ci-example"
-      - name: git_branch
-        value: 'another-example'
-      - name: target_branch
-        value: 'main'
-      - name: container_tag
-        value: 'stable'
-      - name: container_image
-        value: "k3d-registry.localhost:5000/hello-world"
-      - name: dockerfile
-        value: Dockerfile
-      - name: path
-        value: "/CI"
 ```
 
 You can of course adjust other parameters as you see fit, and keep running the workflows to experiment. You may need to change the final-application deployment.
