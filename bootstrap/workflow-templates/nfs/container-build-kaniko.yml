@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: container-build-kaniko
+  annotations:
+    workflows.argoproj.io/description: >-
+      Uses Kaniko to build a container image within Kubernetes.
+    workflows.argoproj.io/maintainer: 'Pipekit Inc'
+    workflows.argoproj.io/maintainer_url: 'https://github.com/pipekit/argo-workflows-ci-example'
+    workflows.argoproj.io/version: '>= 3.3.6'
+spec:
+  entrypoint: main
+  templates:
+  - name: main
+    dag:
+      tasks:
+        - name: container-build
+          template: container-build
+
+  - name: container-build
+    container:
+      image: gcr.io/kaniko-project/executor:debug
+      imagePullPolicy: Always
+      command: ['sh', '-c']
+      args:
+      - echo "Retrieving git clone..." && cp -R /workdir/{{workflow.parameters.app_repo}} /container-build
+
+        /kaniko/executor --dockerfile="/container-build/{{workflow.parameters.app_repo}}{{workflow.parameters.path}}/{{workflow.parameters.dockerfile}}" --destination={{workflow.parameters.container_image}}:{{workflow.parameters.container_tag}} --context="dir:///container-build/{{workflow.parameters.app_repo}}/{{workflow.parameters.path}}" --cache=true --use-new-run=true --reproducible=true --push-retry=3
+      volumeMounts:
+        - name: container-build
+          mountPath: /container-build
+        - name: workdir
+          mountPath: /workdir
+      resources:
+        requests:
+          memory: 1Gi
+          cpu: 1
+    #20 minutes
+    activeDeadlineSeconds: 1200
