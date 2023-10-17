@@ -59,11 +59,6 @@ spec:
       env:
         - name: BUILDKITD_FLAGS
           value: --oci-worker-no-process-sandbox
-      volumeMounts:
-        - name: container-build
-          mountPath: /container-build
-        - name: workdir
-          mountPath: /workdir
       securityContext:
         seccompProfile:
           type: Unconfined
