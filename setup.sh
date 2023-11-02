@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 k3d cluster create --config bootstrap/k3d.conf
 
