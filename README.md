@@ -129,16 +129,21 @@ kubectl -n argo create -f workflow-s3.yml
 
 ## Mac Users
 Monterey (MacOS 12) and greater users might find that the k3d cluster doesn't start due to port 5000 being in use.
-It seems Apple has decided to automatically enable the Airplay Receiver option in the Sharing menu of System Preferences. You can either disable this, or change port 5000 in this repo to something else.
+Apple automatically enables the Airplay Receiver option in the Sharing menu of System Preferences. You can either disable this, or change port 5000 in this repo to something else.
 
 ## Argo Workflows Support
-Do feel free to raise issues in this repository, however there are better places for specific Argo Workflows questions....
+
+Pipekit’s team of Argo experts provide professional support for companies using Argo Workflows. Pipekit's Argo contributors help platform teams optimize pipeline performance, squash upstream bugs, and make faster technical decisions. Learn more at [pipekit.io/services](https://pipekit.io/services?utm_campaign=talk-demos).
+
+For more information about Argo Workflows, please see the following resources:
 
 * [The Argo Workflows Documentation](https://argoproj.github.io/argo-workflows/)
 * [The Argo Workflows GitHub Repository](https://github.com/argoproj/argo-workflows/)
 * [The Argo Workflows Slack Channel](https://cloud-native.slack.com/archives/C01QW9QSSSK)
 
-[Pipekit](pipekit.io) allows you to manage your workflows at scale. The control plane configures Argo Workflows for you in your infrastructure, enabling you to optimize multi-cluster workloads while reducing your cloud spend.  The team at Pipekit is also happy to support you through your Argo Workflows journey via commercial support.
+## About Pipekit
+
+Pipekit is the control plane for Argo Workflows. Platform teams use Pipekit to manage data & CI pipelines at scale, while giving developers self-serve access to Argo. Pipekit's unified logging view, enterprise-grade RBAC, and multi-cluster management capabilities lower maintenance costs for platform teams while delivering a superior devex for Argo users. Sign up for a 30-day free trial at [pipekit.io/signup](https://pipekit.io/signup?utm_campaign=talk-demos).
 
 # Acknowledgements
 Thank you to [Sendible](https://www.sendible.com) for their outsized contributions to this repository.
