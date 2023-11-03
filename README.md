@@ -1,4 +1,4 @@
-[![Pipekit Logo](assets/images/pipekit-logo.png)](https://pipekit.io)
+[![Pipekit Logo](assets/images/pipekit-logo.png)](https://pipekit.io?utm_campaign=ci-example)
 
 
 # Argo Workflows - Example CI
