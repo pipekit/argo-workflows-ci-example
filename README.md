@@ -49,10 +49,23 @@ chmod +x setup.sh
 ```
 Once the setup is completed (3-7 mins depending on how sprightly your local machine is feeling), you can view the argo-workflows UI at https://localhost:8443/argo/workflows/argo (the S in https is important and you'll need to accept the self-signed certificate). Make sure you are looking at the 'argo' namespace.
 
+### Run the workflow using yaml
+
 Then you can deploy the workflow and you should see it appear in the UI.
 ```
 kubectl -n argo create -f workflow.yml
 ```
+
+### Run the workflow using [Hera](https://hera.readthedocs.io/en/stable/)
+
+Ensure you have python and the hera framework installed.
+
+You can deploy all the templates and run the workflow using
+```
+python hera/nfs/workflow.py
+```
+
+### Looking at the workflow run
 
 Once the workflow has successfully run, you can navigate to https://localhost:8443/workflows-ci-example/ in your browser. The website should tell you the branch that it was built from (the default is 'example') and the name of the workflow that built it.
 
