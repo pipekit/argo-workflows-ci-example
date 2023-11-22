@@ -2,24 +2,17 @@ from hera.workflows import WorkflowTemplate, DAG, Container, Task, Resources, mo
 from hera.exceptions import AlreadyExists
 import shared
 
-html_modifier_script = '''apk --update add git
+html_modifier_script = '''cd /workdir/{{workflow.parameters.app_repo}}/CI
 
-cd /workdir
-echo "Start Clone of source branch"
-git clone https://github.com/pipekit/{{workflow.parameters.app_repo}}.git
-cd {{workflow.parameters.app_repo}}
+if grep -q CHANGEMEPLEASE index.html; then
+  cat index.html | sed -E 's/CHANGEMEPLEASE/{{workflow.name}} and it used nfs-server-provisioner for artifact passing./g' > tmp_index.html
+  mv tmp_index.html index.html
+else
+  echo "CHANGEMEPLEASE was not found in index.html. Exiting"
+  exit 1
+fi
 
-## These lines are a hack just for the example.
-git config --global --add safe.directory /workdir/{{workflow.parameters.app_repo}}
-git config --global user.email "sales@pipekit.io"
-git config --global user.name "Tim Collins"
-
-git checkout {{workflow.parameters.git_branch}}
-
-echo "Merge in target branch"
-git merge origin/{{workflow.parameters.target_branch}}
-
-echo "Complete."
+cat index.html
 '''
 
 with WorkflowTemplate(
