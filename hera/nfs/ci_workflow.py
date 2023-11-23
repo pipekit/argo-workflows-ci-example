@@ -1,16 +1,21 @@
-from hera.workflows import WorkflowTemplate, Parameter, DAG, Container, Task, Resource, EmptyDirVolume, models as m
-from hera.exceptions import AlreadyExists
+from shared import (
+    WorkflowTemplate,
+    AlreadyExists,
+    DAG,
+    EmptyDirVolume,
+    Parameter,
+    Resource,
+    m
+)
 
 from git_checkout_pr import git_checkout_pr
 from html_modifier import html_modifier
 from container_build import container_build
 from deploy_application import deploy_application, deploy_application_manifest
-import shared
 
 with WorkflowTemplate(
     name="hera-ci-workflow",
     entrypoint="main",
-    namespace=shared.namespace,
     volume_claim_templates=[
         m.PersistentVolumeClaim(
             metadata=m.ObjectMeta(name="workdir"),
@@ -50,9 +55,6 @@ The Workflow...
 
 It does not pretend to be a definitive example, but it aims to inspire. In order to make this a semi-usable example, we have cut a number of security corners. Please don't just blindly run this in production.
 ''',
-        'workflows.argoproj.io/maintainer': 'Pipekit Inc',
-        'workflows.argoproj.io/maintainer_url': 'https://github.com/pipekit/argo-workflows-ci-example',
-        'workflows.argoproj.io/version': '>= 3.3.6',
     },
 ) as ci_workflow:
     delete_application_resource = Resource(name="delete-application",
@@ -60,16 +62,12 @@ It does not pretend to be a definitive example, but it aims to inspire. In order
                   manifest=deploy_application_manifest
                   )
     with DAG(name="main") as main:
-        git_checkout_task = Task(name="git-checkout", template_ref=m.TemplateRef(
-            name=git_checkout_pr.name, template=git_checkout_pr.entrypoint))
-        html_modifier_task = Task(name="html-modifier", template_ref=m.TemplateRef(
-            name=html_modifier.name, template=html_modifier.entrypoint))
-        container_build_task = Task(name="container-build", template_ref=m.TemplateRef(
-            name=container_build.name, template=container_build.entrypoint))
-        deploy_application_task = Task(name="deploy-application", template_ref=m.TemplateRef(
-            name=deploy_application.name, template=deploy_application.entrypoint))
+        git_checkout_pr_task = git_checkout_pr(name="git-checkout-pr")
+        html_modifier_task = html_modifier(name="html-modifier")
+        container_build_task = container_build(name="container-build")
+        deploy_application_task = deploy_application(name="deploy-application")
         delete_application_task = delete_application_resource(name="delete-application", depends="deploy-application.Failed")
-        git_checkout_task >> html_modifier_task >> container_build_task >> deploy_application_task
+        git_checkout_pr_task >> html_modifier_task >> container_build_task >> deploy_application_task
 
 ci_workflow.to_file(".")
 try:

@@ -1,6 +1,11 @@
-from hera.workflows import WorkflowTemplate, DAG, Container, Task, Resources, models as m
-from hera.exceptions import AlreadyExists
-import shared
+from shared import (
+    WorkflowTemplate,
+    Resources,
+    Container,
+    m
+)
+
+# Clones a git repository and then performs a git checkout of a branch defined in the workflow workflow.parameters. Then merges in a defined target branch.
 
 git_checkout_script = '''apk --update add git
 
@@ -22,30 +27,11 @@ git merge origin/{{workflow.parameters.target_branch}}
 echo "Complete."
 '''
 
-with WorkflowTemplate(
-    name="hera-git-checkout-pr",
-    entrypoint="main",
-    namespace=shared.namespace,
-    annotations={
-        'workflows.argoproj.io/description': """Clones a git repository and then performs a git checkout of a branch defined
-in the workflow workflow.parameters. Then merges in a defined target branch.""",
-        'workflows.argoproj.io/maintainer': 'Pipekit Inc',
-        'workflows.argoproj.io/maintainer_url': 'https://github.com/pipekit/argo-workflows-ci-example',
-        'workflows.argoproj.io/version': '>= 3.3.6',
-    },
-) as git_checkout_pr:
-    git_checkout_pr_cont = Container(name="git-checkout-pr",
-                                     image="alpine:latest",
-                                     command=["sh", "-c", git_checkout_script],
-                                     volume_mounts=[
-                                         m.VolumeMount(name="workdir",
-                                                       mount_path="/workdir")],
-                                     resources=Resources(memory_request="250Mi", cpu_request="4m"),
-                                     active_deadline_seconds=1200)
-    with DAG(name="main") as main:
-        Task(name="git-checkout-pr", template=git_checkout_pr_cont)
-
-try:
-    git_checkout_pr.create()
-except AlreadyExists:
-    git_checkout_pr.update()
+git_checkout_pr = Container(name="git-checkout-pr",
+               image="alpine:latest",
+               command=["sh", "-c", git_checkout_script],
+               volume_mounts=[
+                   m.VolumeMount(name="workdir",
+                                 mount_path="/workdir")],
+               resources=Resources(memory_request="250Mi", cpu_request="4m"),
+               active_deadline_seconds=1200)

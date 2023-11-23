@@ -1,7 +1,9 @@
-from hera.workflows import Workflow, Parameter, DAG, Container, Task, Resource
-from ci_workflow import ci_workflow
+from shared import (
+    Workflow,
+    Parameter
+)
 
-import shared
+from ci_workflow import ci_workflow
 
 with Workflow(
     generate_name="hera-ci-workflow-",
@@ -21,3 +23,6 @@ with Workflow(
     workflow_template_ref=ci_workflow
 ) as workflow:
     workflow.create()
+    print(workflow.get_workflow_link())   # get a link for monitoring
+    print("Waiting for workflow to complete")
+    workflow.wait()
