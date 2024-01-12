@@ -19,7 +19,8 @@
   "packageRules": [
     {
       "packagePatterns": ["^minio"],
-      "versioning": "regex:^RELEASE\\.(?<major>\\d{4})-(?<minor>\\d{2})-(?<patch>\\d{2})"
+      "versioning": "regex:^RELEASE\\.(?<major>\\d{4})-(?<minor>\\d{2})-(?<patch>\\d{2})",
+      "schedule": ["on the last day of the month"]
     }
   ]
 }
