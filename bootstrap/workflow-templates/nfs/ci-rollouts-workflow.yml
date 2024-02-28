@@ -1,0 +1,127 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: ci-rollouts-workflow
+  annotations:
+    workflows.argoproj.io/description: >-
+      A basic CI leveraging Argo Workflows.
+
+      The Workflow...
+
+      * pulls a repo from git. Specifically pulling a branch based on a pull request;
+      * merges the target branch into it;
+      * modifies the html that will be copied into the container to inject the unique name of the running workflow;
+      * builds a container from a Dockerfile and pushes to a registry;
+      * deploys a Kubernetes Deployment manifest that uses the newly-built container to deploy a static website;
+      * builds a second container from a Dockerfile and pushes to a registry using a different tag;
+      * uses Argo Rollouts to control the rollout of this second image over the top of the first.
+
+      It does not pretend to be a definitive example, but it aims to inspire. In order to make this a semi-usable example, we have cut a number of security corners. Please don't just blindly run this in production.
+    workflows.argoproj.io/maintainer: 'Pipekit Inc'
+    workflows.argoproj.io/maintainer_url: 'https://github.com/pipekit/argo-workflows-ci-example'
+    workflows.argoproj.io/version: '>= 3.5.2'
+spec:
+# This is entirely optional. It allows us to use Prometheus to scrape the metrics from the argo Workflow Controller, and to measure the success of our CI.
+  metrics:
+    prometheus:
+      # Writes a prometheus metric stating the length of time it took the workflow to complete. Grouped by workflow status and 'type'.
+      - name: exec_duration_gauge
+        labels:
+          - key: name
+            value: "ci-workflow"
+          - key: type
+            value: "pull-request"
+          - key: status
+            value: "{{status}}"
+        help: "Duration gauge by name"
+        gauge:
+          value: "{{workflow.duration}}"
+          realtime: false
+      # If the workflow fails, we increase the Prometheus failure counter by 1.
+      - name: result_counter
+        help: "Count of step execution by result status"
+        labels:
+          - key: status
+            value: Failed
+          - key: name
+            value: "ci-workflow"
+          - key: type
+            value: "pull-request"
+        when: "{{status}} == Failed"
+        counter:
+          value: "1"
+      # If the workflow succeeds, we increase the Prometheus succeeded counter by 1.
+      - name: result_counter
+        help: "Count of step execution by result status"
+        labels:
+          - key: status
+            value: Succeeded
+          - key: name
+            value: "ci-workflow"
+          - key: type
+            value: "pull-request"
+        when: "{{status}} == Succeeded"
+        counter:
+          value: "1"
+  entrypoint: main
+  # We request an NFS share (called 'workdir') so that we can pull the code, and manipulate it across multiple nodes.
+  # By the nature of the share, we would be able to access it from multiple nodes at the same time, allowing for parallel nodes.
+  # We use nfs-server-provisioner for this, which uses disk on the Kubernetes node to provision the share. The PVCs are cleaned up when the workflow finishes.
+  volumeClaimTemplates:
+  - metadata:
+      name: workdir
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: nfs
+      resources:
+        requests:
+          storage: 1Gi
+  # The container build step copies the code from the NFS share to this ephemeral volume, and then runs the build.
+  # We do this a) because NFS shares are slow and b) to allow us to run another workflow step alongside the build if we wish.
+  volumes:
+  - name: container-build
+    emptyDir: {}
+# You can set default parameters here if you prefer. If you simply don't inject them when calling this template, the defaults will come through.
+# We default 'container_tag' to 'stable' here.
+  arguments:
+    parameters:
+    - name: app_repo
+      value: ""
+    - name: git_branch
+      value: ""
+    - name: target_branch
+      value: ""
+    - name: container_tag
+      value: "stable"
+    - name: container_image
+      value: ""
+    - name: dockerfile
+      value: ""
+    - name: path
+      value: ""
+ # All the steps in this DAG are referencing external templates.
+ # This allows us to re-use those templates in other workflows, and also makes this CI workflow quite tidy.
+ # For reference we have also included a 'local' template (delete-application) to show that it's possible to mix-and-match local and external templates.
+  templates:
+    - name: main
+      dag:
+        tasks:
+          - name: git-checkout-pr
+            templateRef:
+              name: git-checkout-pr
+              template: main
+          - name: html-modifier
+            templateRef:
+              name: html-modifier
+              template: main
+            depends: git-checkout-pr
+          - name: container-build
+            templateRef:
+              name: container-build
+              template: main
+            depends: html-modifier
+          - name: deploy-resources
+            templateRef:
+              name: deploy-resources
+              template: main
+            depends: container-build

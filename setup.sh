@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+k3d cluster delete workflows-ci || true
 k3d cluster create --config bootstrap/k3d.conf
 
 # Prevent users from accidentally deploying to the wrong cluster.
@@ -16,7 +17,7 @@ kubectl -n kube-system rollout status deployment/metrics-server
 kubectl apply -k bootstrap/argocd
 kubectl -n argocd rollout status statefulset/argocd-application-controller
 kubectl -n argocd rollout status deployment/argocd-repo-server
-kubectl -n argocd apply -f bootstrap/app-of-apps
+kubectl -n argocd apply -f bootstrap/app-of-apps${1}
 
 # Wait for Argo CD to start syncing its new-found applications
 sleep 30

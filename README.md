@@ -2,7 +2,8 @@
 
 
 # Argo Workflows - Example CI
-A basic CI leveraging [Argo Workflows](https://argo-workflows.readthedocs.io/en/latest/) and [Argo CD](https://argoproj.github.io/argo-cd/).
+* A basic CI leveraging [Argo Workflows](https://argo-workflows.readthedocs.io/en/latest/) and [Argo CD](https://argoproj.github.io/argo-cd/).
+* A second, basic CI leveraging [Argo Workflows](https://argo-workflows.readthedocs.io/en/latest/) and [Argo Rollouts](https://argoproj.github.io/argo-rollouts/).
 
 ![CI Workflow Screenshot](assets/images/workflow-screenshot.png)
 
@@ -17,7 +18,6 @@ A basic CI leveraging [Argo Workflows](https://argo-workflows.readthedocs.io/en/
 
 It does not pretend to be a definitive example, but it aims to inspire.
 In order to make this a semi-usable example, we have cut a number of security corners. Please don't just blindly run this in production.
-
 
 # Software Versions Used:
 This example installs a number of software packages:
@@ -43,7 +43,7 @@ The summary is "probably don't". If you really want to run on a remote cluster, 
 You will need to remove the k3d cluster creation step from the script.
 
 ## Steps to Run
-```
+```bash
 chmod +x setup.sh
 ./setup.sh
 ```
@@ -61,7 +61,7 @@ kubectl -n argo create -f workflow.yml
 Ensure you have python and the hera framework installed.
 
 You can deploy all the templates and run the workflow using
-```
+```bash
 python hera/nfs/workflow.py
 ```
 
@@ -72,14 +72,14 @@ This achieves the same goals as the YAML version, but it is not an exact match i
 Once the workflow has successfully run, you can navigate to https://localhost:8443/workflows-ci-example/ in your browser. The website should tell you the branch that it was built from (the default is 'example') and the name of the workflow that built it.
 
 You can delete the Argo CD application to remove the deployment. You should do this before re-running the workflow:
-```
+```bash
 kubectl -n argocd delete application final-application
 ```
 
 You can of course adjust other parameters as you see fit, and keep running the workflows to experiment. You may need to change the final-application deployment.
 
 # Deleting the cluster
-```
+```bash
 k3d cluster delete workflows-ci
 ```
 
@@ -139,6 +139,47 @@ You can run the following command to trigger the same workflow, using minio to p
 ```
 kubectl -n argo create -f workflow-s3.yml
 ```
+
+# Argo Rollouts (Work in progress - contact hello@pipekit.io for more information)
+Now that you understand how you could deploy using Argo Workflows and Argo CD, you may wish to experiment with Argo Rollouts. This is a more advanced deployment tool that allows you to do things like canary deployments and blue/green deployments.
+
+Typically, you would use Argo Rollouts in combination with Argo CD, to control the rate at which your application is deployed to your cluster. Unfortunately, this is not possible to include in this example without requiring you to fork this repo to be able to make changes to git that Argo CD picks up.
+
+As an alternative, we have provided an additional Workflow that performs the following steps:
+
+* pulls a repo from git. Specifically simulating pulling a branch based on a pull request;
+* merges the target branch into it;
+* modifies the html that will be copied into the container to inject the unique name of the running workflow;
+* builds a container from a Dockerfile and pushes to a registry;
+* deploys a Kubernetes Deployment manifest that uses the newly-built container to deploy a static website;
+* builds a second container from a Dockerfile and pushes to a registry using a different tag;
+* uses Argo Rollouts to control the rollout of this second image over the top of the first.
+
+```bash
+./setup.sh -rollouts
+```
+
+Once the setup is completed (3-7 mins depending on how sprightly your local machine is feeling), you can view the argo-workflows UI at https://localhost:8443/argo/workflows/argo (the S in https is important and you'll need to accept the self-signed certificate). Make sure you are looking at the 'argo' namespace.
+
+### Run the rollouts workflow using yaml
+
+Then you can deploy the workflow and you should see it appear in the UI.
+```
+kubectl -n argo create -f rollouts-workflow.yml
+```
+
+### TODO: Run the rollouts workflow using [Hera](https://hera.readthedocs.io/en/stable/)
+
+Ensure you have python and the hera framework installed.
+
+You can deploy all the templates and run the workflow using
+```bash
+python hera/nfs/workflow.py
+```
+
+This achieves the same goals as the YAML version, but it is not an exact match in implementation to show a more Pythonic way of working.
+
+---
 
 # Further Help and Support
 

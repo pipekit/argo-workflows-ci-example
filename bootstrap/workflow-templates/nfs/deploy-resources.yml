@@ -1,0 +1,117 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: deploy-resources
+  annotations:
+    workflows.argoproj.io/description: >-
+      Leverages Argo Workflows' ability to interact directly with Kubernetes to deploy a Kubernetes resource.
+      It monitors the health status of the Kubernetes resource and is only considered 'done' once
+      the resource reports itself as healthy.
+    workflows.argoproj.io/maintainer: 'Pipekit Inc'
+    workflows.argoproj.io/maintainer_url: 'https://github.com/pipekit/argo-workflows-ci-example'
+    workflows.argoproj.io/version: '>= 3.5.2'
+spec:
+  entrypoint: main
+  templates:
+  - name: main
+    dag:
+      tasks:
+        - name: deploy-resource-svc
+          template: deploy-resource-svc
+        - name: deploy-resource-ingress
+          template: deploy-resource-ingress
+        - name: deploy-resource-deployment
+          template: deploy-resource-deployment
+
+  - name: deploy-resource-svc
+    resource:
+      action: create
+      # successCondition: status.health.status == Healthy
+      # failureCondition: status.health.status == Degraded
+      manifest: |
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: example-application
+        spec:
+          type: ClusterIP
+          ports:
+            - port: 80
+              targetPort: 80
+          selector:
+            app: example-application
+
+  - name: deploy-resource-ingress
+    resource:
+      action: create
+      # successCondition: status.health.status == Healthy
+      # failureCondition: status.health.status == Degraded
+      manifest: |
+        apiVersion: networking.k8s.io/v1
+        kind: Ingress
+        metadata:
+          name: example-application
+          annotations:
+            nginx.ingress.kubernetes.io/rewrite-target: /$1
+            nginx.ingress.kubernetes.io/use-regex: 'true'
+        spec:
+          ingressClassName: nginx
+          rules:
+          - host: localhost
+            http:
+              paths:
+              - path: /workflows-ci-example/(.*)
+                pathType: Prefix
+                backend:
+                  service:
+                    name: example-application
+                    port:
+                      number: 80
+          tls:
+          - hosts:
+            - localhost
+            secretName: tls.localhost
+
+  - name: deploy-resource-deployment
+    resource:
+      action: create
+      # successCondition: status.health.status == Healthy
+      # failureCondition: status.health.status == Degraded
+      manifest: |
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: example-application
+          labels:
+            app: example-application
+        spec:
+          replicas: 4
+          selector:
+            matchLabels:
+              app: example-application
+          template:
+            metadata:
+              labels:
+                app: example-application
+            spec:
+              containers:
+                - name: eg-app
+                  image: k3d-registry.localhost:5000/hello-world:stable
+                  imagePullPolicy: Always
+                  readinessProbe:
+                    failureThreshold: 3
+                    httpGet:
+                      path: /
+                      port: 80
+                      scheme: HTTP
+                    initialDelaySeconds: 5
+                    periodSeconds: 5
+                    successThreshold: 1
+                    timeoutSeconds: 1
+                  resources:
+                    requests:
+                      cpu: 3m
+                      memory: 20Mi
+                    limits:
+                      cpu: 10m
+                      memory: 64Mi

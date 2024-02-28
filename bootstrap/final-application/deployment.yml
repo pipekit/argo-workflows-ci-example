@@ -5,7 +5,7 @@ metadata:
   labels:
     app: example-application
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
       app: example-application
@@ -15,7 +15,7 @@ spec:
         app: example-application
     spec:
       containers:
-        - name: suptool
+        - name: eg-app
           image: k3d-registry.localhost:5000/hello-world:stable
           imagePullPolicy: Always
           readinessProbe:
@@ -35,40 +35,3 @@ spec:
             limits:
               cpu: 10m
               memory: 64Mi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: example-application
-spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: 80
-  selector:
-    app: example-application
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: example-application
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
-    nginx.ingress.kubernetes.io/use-regex: 'true'
-spec:
-  ingressClassName: nginx
-  rules:
-  - host: localhost
-    http:
-      paths:
-      - path: /workflows-ci-example/(.*)
-        pathType: Prefix
-        backend:
-          service:
-            name: example-application
-            port:
-              number: 80
-  tls:
-  - hosts:
-    - localhost
-    secretName: tls.localhost
