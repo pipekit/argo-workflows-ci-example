@@ -13,6 +13,12 @@ rules:
   - get
   - update
   - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: app-deployment-role
+rules:
 - apiGroups:
   - apps
   resources:
@@ -50,6 +56,19 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
   name: argo-role
+subjects:
+- kind: ServiceAccount
+  name: argo
+  namespace: argo
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: app-deployment-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: app-deployment-role
 subjects:
 - kind: ServiceAccount
   name: argo
