@@ -185,16 +185,18 @@ kubectl -n final-application get pods
 * Run the second workflow to see the canary deployment in action:
 ```bash
 kubectl -n argo create -f rollouts-workflow-2.yml
-kubectl -n final-application get pods --watch
+kubectl -n final-application get rollouts --watch
 
 ## TODO If you want to use the minio/s3/artifacts version, you can run:
 kubectl -n argo create -f rollouts-workflow-s3-2.yml
-kubectl -n final-application get pods --watch
+kubectl -n final-application get rollouts --watch
 
 ## TODO If you prefer to run using Hera, Ensure you have python and the hera framework installed and run:
 python hera/nfs/rollouts-workflow-2.py
-kubectl -n final-application get pods --watch
+kubectl -n final-application get rollouts --watch
 ```
+
+During the rollout, you can keep refreshing https://localhost:8443/workflows-ci-example/ in your browser to see the mix of old and new pods in play. As the rollout progresses, you will see the new pods take over from the old ones.
 
 `rollouts-workflow(-s3)-2` is the exact same workflow as the one you previously ran, but with a different workflow parameter to set the image tag. This will cause Argo Rollouts to deploy the new image over the top of the old one at the cadence defined in the Rollout manifest:
 ```yaml
