@@ -26,8 +26,6 @@ spec:
   - name: deploy-resource-svc
     resource:
       action: apply
-      # successCondition: status.health.status == Healthy
-      # failureCondition: status.health.status == Degraded
       manifest: |
         apiVersion: v1
         kind: Service
@@ -45,8 +43,6 @@ spec:
   - name: deploy-resource-ingress
     resource:
       action: apply
-      # successCondition: status.health.status == Healthy
-      # failureCondition: status.health.status == Degraded
       manifest: |
         apiVersion: networking.k8s.io/v1
         kind: Ingress
@@ -77,8 +73,7 @@ spec:
   - name: deploy-resource-deployment
     resource:
       action: apply
-      # successCondition: status.health.status == Healthy
-      # failureCondition: status.health.status == Degraded
+      successCondition: status.phases == Healthy
       manifest: |
         apiVersion: argoproj.io/v1alpha1
         kind: Rollout
