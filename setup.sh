@@ -19,6 +19,9 @@ kubectl -n argocd rollout status statefulset/argocd-application-controller
 kubectl -n argocd rollout status deployment/argocd-repo-server
 kubectl -n argocd apply -f bootstrap/app-of-apps${1}
 
+# Create 'final-application' namespace for the final application
+kubectl create namespace final-application
+
 # Wait for Argo CD to start syncing its new-found applications
 sleep 30
 kubectl -n nfs-server-provisioner rollout status statefulset/nfs-server-provisioner

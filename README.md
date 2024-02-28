@@ -52,7 +52,7 @@ Once the setup is completed (3-7 mins depending on how sprightly your local mach
 ### Run the workflow using yaml
 
 Then you can deploy the workflow and you should see it appear in the UI.
-```
+```bash
 kubectl -n argo create -f workflow.yml
 ```
 
@@ -164,7 +164,7 @@ Once the setup is completed (3-7 mins depending on how sprightly your local mach
 ### Run the rollouts workflow using yaml
 
 Then you can deploy the workflow and you should see it appear in the UI.
-```
+```bash
 kubectl -n argo create -f rollouts-workflow.yml
 ```
 
