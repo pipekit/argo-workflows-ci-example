@@ -179,6 +179,7 @@ kubectl -n final-application get pods
 * Run the second workflow to see the canary deployment in action:
 ```bash
 kubectl -n argo create -f rollouts-workflow-2.yml
+kubectl -n final-application get pods --watch
 ```
 
 This is the exact same workflow, but with a different workflow paramater to set the image tag.
