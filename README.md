@@ -2,7 +2,7 @@
 
 
 # Argo Workflows - Example CI
-A basic CI leveraging [Argo Workflows](https://argoproj.github.io/argo-workflows/).
+A basic CI leveraging [Argo Workflows](https://argo-workflows.readthedocs.io/en/latest/) and [Argo CD](https://argoproj.github.io/argo-cd/).
 
 ![CI Workflow Screenshot](assets/images/workflow-screenshot.png)
 
