@@ -182,7 +182,28 @@ kubectl -n argo create -f rollouts-workflow-2.yml
 kubectl -n final-application get pods --watch
 ```
 
-This is the exact same workflow, but with a different workflow paramater to set the image tag.
+`rollouts-workflow-2` is the exact same workflow, but with a different workflow parameter to set the image tag. This will cause argo-rollouts to deploy the new image over the top of the old one at the cadence defined in the rollout manifest.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+    name: example-application
+    namespace: final-application
+spec:
+    replicas: 5
+    strategy:
+    canary:
+        steps:
+        - setWeight: 20
+        - pause: {duration: 10}
+        - setWeight: 40
+        - pause: {duration: 10}
+        - setWeight: 60
+        - pause: {duration: 10}
+        - setWeight: 80
+        - pause: {duration: 10}
+...
 
 
 ### TODO: Run the rollouts workflow using [Hera](https://hera.readthedocs.io/en/stable/)
