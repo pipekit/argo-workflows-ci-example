@@ -33,7 +33,7 @@ spec:
         kind: Service
         metadata:
           name: example-application
-          namespace: example-application
+          namespace: final-application
         spec:
           type: ClusterIP
           ports:
@@ -52,7 +52,7 @@ spec:
         kind: Ingress
         metadata:
           name: example-application
-          namespace: example-application
+          namespace: final-application
           annotations:
             nginx.ingress.kubernetes.io/rewrite-target: /$1
             nginx.ingress.kubernetes.io/use-regex: 'true'
@@ -84,7 +84,7 @@ spec:
         kind: Deployment
         metadata:
           name: example-application
-          namespace: example-application
+          namespace: final-application
           labels:
             app: example-application
         spec:
