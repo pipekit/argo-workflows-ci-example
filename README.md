@@ -152,6 +152,8 @@ As an alternative, we have provided an additional Workflow that performs the fol
 * modifies the html that will be copied into the container to inject the unique name of the running workflow;
 * builds a container from a Dockerfile and pushes to a registry;
 * deploys a Kubernetes Deployment manifest that uses the newly-built container to deploy a static website;
+
+Then a second workflow does the same but:
 * builds a second container from a Dockerfile and pushes to a registry using a different tag;
 * uses Argo Rollouts to control the rollout of this second image over the top of the first.
 
@@ -163,10 +165,24 @@ Once the setup is completed (3-7 mins depending on how sprightly your local mach
 
 ### Run the rollouts workflow using yaml
 
-Then you can deploy the workflow and you should see it appear in the UI.
+* Deploy the workflow and you should see it appear in the Argo Workflows UI.
 ```bash
 kubectl -n argo create -f rollouts-workflow.yml
 ```
+
+* View the resulting application in your browser at https://localhost:8443/workflows-ci-example/
+* View the resulting pods for the application in your cluster by running:
+```bash
+kubectl -n final-application get pods
+```
+
+* Run the second workflow to see the canary deployment in action:
+```bash
+kubectl -n argo create -f rollouts-workflow-2.yml
+```
+
+This is the exact same workflow, but with a different workflow paramater to set the image tag.
+
 
 ### TODO: Run the rollouts workflow using [Hera](https://hera.readthedocs.io/en/stable/)
 

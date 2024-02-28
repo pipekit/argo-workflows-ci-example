@@ -25,7 +25,7 @@ spec:
 
   - name: deploy-resource-svc
     resource:
-      action: create
+      action: apply
       # successCondition: status.health.status == Healthy
       # failureCondition: status.health.status == Degraded
       manifest: |
@@ -44,7 +44,7 @@ spec:
 
   - name: deploy-resource-ingress
     resource:
-      action: create
+      action: apply
       # successCondition: status.health.status == Healthy
       # failureCondition: status.health.status == Degraded
       manifest: |
@@ -76,19 +76,30 @@ spec:
 
   - name: deploy-resource-deployment
     resource:
-      action: create
+      action: apply
       # successCondition: status.health.status == Healthy
       # failureCondition: status.health.status == Degraded
       manifest: |
-        apiVersion: apps/v1
-        kind: Deployment
+        apiVersion: argoproj.io/v1alpha1
+        kind: Rollout
         metadata:
           name: example-application
           namespace: final-application
           labels:
             app: example-application
         spec:
-          replicas: 4
+          replicas: 5
+          strategy:
+            canary:
+              steps:
+              - setWeight: 20
+              - pause: {}
+              - setWeight: 40
+              - pause: {duration: 10}
+              - setWeight: 60
+              - pause: {duration: 10}
+              - setWeight: 80
+              - pause: {duration: 10}
           selector:
             matchLabels:
               app: example-application
@@ -99,7 +110,7 @@ spec:
             spec:
               containers:
                 - name: eg-app
-                  image: k3d-registry.localhost:5000/hello-world:stable
+                  image: k3d-registry.localhost:5000/hello-world:{{workflow.parameters.container_tag}}
                   imagePullPolicy: Always
                   readinessProbe:
                     failureThreshold: 3
