@@ -168,6 +168,12 @@ Once the setup is completed (3-7 mins depending on how sprightly your local mach
 * Deploy the workflow and you should see it appear in the Argo Workflows UI.
 ```bash
 kubectl -n argo create -f rollouts-workflow.yml
+
+## TODO If you want to use the minio/s3/artifacts version, you can run:
+kubectl -n argo create -f rollouts-workflow-s3.yml
+
+## TODO If you prefer to run using Hera, Ensure you have python and the hera framework installed and run:
+python hera/nfs/rollouts-workflow.py
 ```
 
 * View the resulting application in your browser at https://localhost:8443/workflows-ci-example/
@@ -180,10 +186,17 @@ kubectl -n final-application get pods
 ```bash
 kubectl -n argo create -f rollouts-workflow-2.yml
 kubectl -n final-application get pods --watch
+
+## TODO If you want to use the minio/s3/artifacts version, you can run:
+kubectl -n argo create -f rollouts-workflow-s3-2.yml
+kubectl -n final-application get pods --watch
+
+## TODO If you prefer to run using Hera, Ensure you have python and the hera framework installed and run:
+python hera/nfs/rollouts-workflow-2.py
+kubectl -n final-application get pods --watch
 ```
 
-`rollouts-workflow-2` is the exact same workflow, but with a different workflow parameter to set the image tag. This will cause argo-rollouts to deploy the new image over the top of the old one at the cadence defined in the rollout manifest.
-
+`rollouts-workflow(-s3)-2` is the exact same workflow as the one you previously ran, but with a different workflow parameter to set the image tag. This will cause Argo Rollouts to deploy the new image over the top of the old one at the cadence defined in the Rollout manifest:
 ```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
@@ -205,17 +218,6 @@ spec:
         - pause: {duration: 10}
 ...
 
-
-### TODO: Run the rollouts workflow using [Hera](https://hera.readthedocs.io/en/stable/)
-
-Ensure you have python and the hera framework installed.
-
-You can deploy all the templates and run the workflow using
-```bash
-python hera/nfs/workflow.py
-```
-
-This achieves the same goals as the YAML version, but it is not an exact match in implementation to show a more Pythonic way of working.
 
 ---
 
