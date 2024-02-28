@@ -73,7 +73,7 @@ spec:
   - name: deploy-resource-deployment
     resource:
       action: apply
-      successCondition: status.phases == Healthy
+      successCondition: status.phase == Healthy
       manifest: |
         apiVersion: argoproj.io/v1alpha1
         kind: Rollout
