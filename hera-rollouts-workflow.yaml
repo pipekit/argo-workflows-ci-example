@@ -1,0 +1,217 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  annotations:
+    workflows.argoproj.io/description: 'A basic CI leveraging Argo Workflows.
+
+
+      The Workflow...
+
+
+      * pulls a repo from git. Specifically pulling a branch based on a pull request;
+
+      * merges the target branch into it;
+
+      * modifies the html that will be copied into the container to inject the unique
+      name of the running workflow;
+
+      * builds a container from a Dockerfile and pushes to a registry;
+
+      * deploys an Argo CD application that uses the newly-built container to deploy
+      a static website.
+
+
+      It does not pretend to be a definitive example, but it aims to inspire. In order
+      to make this a semi-usable example, we have cut a number of security corners.
+      Please don''t just blindly run this in production.
+
+      '
+    workflows.argoproj.io/maintainer: Pipekit Inc
+    workflows.argoproj.io/maintainer_url: https://github.com/pipekit/argo-workflows-ci-example
+    workflows.argoproj.io/version: '>= 3.5.2'
+  name: hera-rollouts-workflow
+  namespace: argo
+spec:
+  arguments:
+    parameters:
+    - name: app_repo
+      value: ''
+    - name: git_branch
+      value: ''
+    - name: target_branch
+      value: ''
+    - name: container_tag
+      value: ''
+    - name: container_image
+      value: ''
+    - name: dockerfile
+      value: ''
+    - name: path
+      value: ''
+  entrypoint: main
+  templates:
+  - dag:
+      tasks:
+      - name: git-checkout-pr
+        template: git-checkout-pr
+      - depends: git-checkout-pr
+        name: html-modifier
+        template: html-modifier
+      - depends: html-modifier
+        name: container-build
+        template: container-build
+      - depends: container-build
+        name: deploy-resource-svc
+        template: deploy-resource-svc
+      - depends: container-build
+        name: deploy-resource-ingress
+        template: deploy-resource-ingress
+      - depends: container-build
+        name: deploy-resource-deployment
+        template: deploy-resource-deployment
+    name: main
+  - activeDeadlineSeconds: '1200'
+    container:
+      command:
+      - sh
+      - -c
+      - 'apk --update add git
+
+
+        cd /workdir
+
+        echo "Start Clone of source branch"
+
+        git clone https://github.com/pipekit/{{workflow.parameters.app_repo}}.git
+
+        cd {{workflow.parameters.app_repo}}
+
+
+        ## These lines are a hack just for the example.
+
+        git config --global --add safe.directory /workdir/{{workflow.parameters.app_repo}}
+
+        git config --global user.email "sales@pipekit.io"
+
+        git config --global user.name "Tim Collins"
+
+
+        git checkout {{workflow.parameters.git_branch}}
+
+
+        echo "Merge in target branch"
+
+        git merge origin/{{workflow.parameters.target_branch}}
+
+
+        echo "Complete."
+
+        '
+      image: alpine:latest
+      resources:
+        requests:
+          cpu: 4m
+          memory: 250Mi
+      volumeMounts:
+      - mountPath: /workdir
+        name: workdir
+    name: git-checkout-pr
+  - activeDeadlineSeconds: '1200'
+    container:
+      command:
+      - sh
+      - -c
+      - "cd /workdir/{{workflow.parameters.app_repo}}/CI\n\nif grep -q CHANGEMEPLEASE\
+        \ index.html; then\n  cat index.html | sed -E 's/CHANGEMEPLEASE/{{workflow.name}}\
+        \ and it used nfs-server-provisioner for artifact passing./g' > tmp_index.html\n\
+        \  mv tmp_index.html index.html\nelse\n  echo \"CHANGEMEPLEASE was not found\
+        \ in index.html. Exiting\"\n  exit 1\nfi\n\ncat index.html\n"
+      image: ubuntu:latest
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+      volumeMounts:
+      - mountPath: /workdir
+        name: workdir
+    name: html-modifier
+  - activeDeadlineSeconds: '1200'
+    container:
+      command:
+      - sh
+      - -c
+      - 'echo "Retrieving git clone..." && cp -R /workdir/{{workflow.parameters.app_repo}}
+        /container-build && buildctl-daemonless.sh build --frontend dockerfile.v0
+        --local context=/container-build/{{workflow.parameters.app_repo}}{{workflow.parameters.path}}
+        --local dockerfile=/container-build/{{workflow.parameters.app_repo}}{{workflow.parameters.path}}
+        --opt filename={{workflow.parameters.dockerfile}} --output type=image,name={{workflow.parameters.container_image}}:{{workflow.parameters.container_tag}},push=true,registry.insecure=true
+
+        '
+      env:
+      - name: BUILDKITD_FLAGS
+        value: --oci-worker-no-process-sandbox
+      image: moby/buildkit:v0.12.3-rootless
+      resources:
+        requests:
+          cpu: '1'
+          memory: 1Gi
+      securityContext:
+        runAsGroup: 1000
+        runAsUser: 1000
+        seccompProfile:
+          type: Unconfined
+      volumeMounts:
+      - mountPath: /container-build
+        name: container-build
+      - mountPath: /workdir
+        name: workdir
+    name: container-build
+  - name: deploy-resource-svc
+    resource:
+      action: apply
+      manifest: "apiVersion: v1\nkind: Service\nmetadata:\n  name: example-application\n\
+        \  namespace: final-application\nspec:\n  type: ClusterIP\n  ports:\n    -\
+        \ port: 80\n      targetPort: 80\n  selector:\n    app: example-application\n"
+  - name: deploy-resource-ingress
+    resource:
+      action: apply
+      manifest: "apiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata:\n  name:\
+        \ example-application\n  namespace: final-application\n  annotations:\n  \
+        \  nginx.ingress.kubernetes.io/rewrite-target: /$1\n    nginx.ingress.kubernetes.io/use-regex:\
+        \ 'true'\nspec:\n  ingressClassName: nginx\n  rules:\n  - host: localhost\n\
+        \    http:\n      paths:\n      - path: /workflows-ci-example/(.*)\n     \
+        \   pathType: Prefix\n        backend:\n          service:\n            name:\
+        \ example-application\n            port:\n              number: 80\n  tls:\n\
+        \  - hosts:\n    - localhost\n    secretName: tls.localhost\n"
+  - name: deploy-resource-deployment
+    resource:
+      action: apply
+      manifest: "        apiVersion: argoproj.io/v1alpha1\nkind: Rollout\nmetadata:\n\
+        \  name: example-application\n  namespace: final-application\n  labels:\n\
+        \    app: example-application\nspec:\n  replicas: 5\n  strategy:\n    canary:\n\
+        \      steps:\n      - setWeight: 20\n      - pause: {duration: 10}\n    \
+        \  - setWeight: 40\n      - pause: {duration: 10}\n      - setWeight: 60\n\
+        \      - pause: {duration: 10}\n      - setWeight: 80\n      - pause: {duration:\
+        \ 10}\n  selector:\n    matchLabels:\n      app: example-application\n  template:\n\
+        \    metadata:\n      labels:\n        app: example-application\n    spec:\n\
+        \      containers:\n        - name: eg-app\n          image: k3d-registry.localhost:5000/hello-world:{{workflow.parameters.container_tag}}\n\
+        \          imagePullPolicy: Always\n          readinessProbe:\n          \
+        \  failureThreshold: 3\n            httpGet:\n              path: /\n    \
+        \          port: 80\n              scheme: HTTP\n            initialDelaySeconds:\
+        \ 5\n            periodSeconds: 5\n            successThreshold: 1\n     \
+        \       timeoutSeconds: 1\n          resources:\n            requests:\n \
+        \             cpu: 3m\n              memory: 20Mi\n            limits:\n \
+        \             cpu: 10m\n              memory: 64Mi\n"
+  volumeClaimTemplates:
+  - metadata:
+      name: workdir
+    spec:
+      accessModes:
+      - ReadWriteMany
+      resources:
+        requests:
+          storage: 1Gi
+      storageClassName: nfs
+  volumes:
+  - emptyDir: {}
+    name: container-build
