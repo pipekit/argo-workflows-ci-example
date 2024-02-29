@@ -47,7 +47,7 @@ spec:
     secretName: tls.localhost
 '''
 
-deploy_resource_manifest_deployment = '''        apiVersion: argoproj.io/v1alpha1
+deploy_resource_manifest_deployment = '''apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
   name: example-application
@@ -100,19 +100,14 @@ spec:
 
 deploy_resource_svc = Resource(name="deploy-resource-svc",
                               action="apply",
-                              # success_condition="status.health.status == Healthy",
-                              # failure_condition="status.health.status == Degraded",
                               manifest=deploy_resource_manifest_svc
                               )
 deploy_resource_ingress = Resource(name="deploy-resource-ingress",
                             action="apply",
-                            # success_condition="status.health.status == Healthy",
-                            # failure_condition="status.health.status == Degraded",
                             manifest=deploy_resource_manifest_ingress
                             )
 deploy_resource_deployment = Resource(name="deploy-resource-deployment",
                             action="apply",
-                            # success_condition="status.health.status == Healthy",
-                            # failure_condition="status.health.status == Degraded",
+                            success_condition="status.phase == Healthy",
                             manifest=deploy_resource_manifest_deployment
                             )
