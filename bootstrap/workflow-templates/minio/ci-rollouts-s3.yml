@@ -1,0 +1,115 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: ci-rollouts-s3
+  annotations:
+    workflows.argoproj.io/description: >-
+      A basic CI leveraging Argo Workflows.
+
+      The Workflow...
+
+      * pulls a repo from git. Specifically pulling a branch based on a pull request;
+      * merges the target branch into it;
+      * modifies the html that will be copied into the container to inject the unique name of the running workflow;
+      * builds a container from a Dockerfile and pushes to a registry;
+      * deploys Kubernetes manifests that uses the newly-built container to deploy a static website. The deployment manifest is managed by Argo Rollouts;
+
+      It does not pretend to be a definitive example, but it aims to inspire. In order to make this a semi-usable example, we have cut a number of security corners. Please don't just blindly run this in production.
+    workflows.argoproj.io/maintainer: 'Pipekit Inc'
+    workflows.argoproj.io/maintainer_url: 'https://github.com/pipekit/argo-workflows-ci-example'
+    workflows.argoproj.io/version: '>= 3.5.2'
+spec:
+# This is entirely optional. It allows us to use Prometheus to scrape the metrics from the argo Workflow Controller, and to measure the success of our CI.
+  metrics:
+    prometheus:
+      # Writes a prometheus metric stating the length of time it took the workflow to complete. Grouped by workflow status and 'type'.
+      - name: exec_duration_gauge
+        labels:
+          - key: name
+            value: "ci-workflow"
+          - key: type
+            value: "pull-request"
+          - key: status
+            value: "{{status}}"
+        help: "Duration gauge by name"
+        gauge:
+          value: "{{workflow.duration}}"
+          realtime: false
+      # If the workflow fails, we increase the Prometheus failure counter by 1.
+      - name: result_counter
+        help: "Count of step execution by result status"
+        labels:
+          - key: status
+            value: Failed
+          - key: name
+            value: "ci-workflow"
+          - key: type
+            value: "pull-request"
+        when: "{{status}} == Failed"
+        counter:
+          value: "1"
+      # If the workflow succeeds, we increase the Prometheus succeeded counter by 1.
+      - name: result_counter
+        help: "Count of step execution by result status"
+        labels:
+          - key: status
+            value: Succeeded
+          - key: name
+            value: "ci-workflow"
+          - key: type
+            value: "pull-request"
+        when: "{{status}} == Succeeded"
+        counter:
+          value: "1"
+  entrypoint: main
+# You can set default parameters here if you prefer. If you simply don't inject them when calling this template, the defaults will come through.
+# We default 'container_tag' to 'stable' here.
+  parameters:
+    - name: app_repo
+      value: "argo-workflows-ci-example"
+    - name: git_branch
+      value: 'example'
+    - name: target_branch
+      value: 'main'
+    - name: container_tag
+      value: 'stable'
+    - name: container_image
+      value: "k3d-registry.localhost:5000/hello-world"
+    - name: dockerfile
+      value: Dockerfile
+    - name: path
+      value: "/CI"
+ # All the steps in this DAG are referencing external templates.
+ # This allows us to re-use those templates in other workflows, and also makes this CI workflow quite tidy.
+ # For reference we have also included a 'local' template (delete-application) to show that it's possible to mix-and-match local and external templates.
+  templates:
+    - name: main
+      dag:
+        tasks:
+          - name: git-checkout-pr-s3
+            templateRef:
+              name: git-checkout-pr-s3
+              template: git-checkout-pr
+          - name: html-modifier-s3
+            templateRef:
+              name: html-modifier-s3
+              template: html-modifier
+            arguments:
+              artifacts:
+                - name: git_repo
+                  from: "{{tasks.git-checkout-pr-s3.outputs.artifacts.git_repo}}"
+            depends: git-checkout-pr-s3
+          - name: container-build-s3
+            templateRef:
+              name: container-build-s3
+              template: container-build
+            arguments:
+              artifacts:
+                - name: modified_git_repo
+                  from: "{{tasks.html-modifier-s3.outputs.artifacts.modified_git_repo}}"
+            depends: html-modifier-s3
+          - name: deploy-resources
+            templateRef:
+              name: deploy-resources
+              template: main
+            depends: container-build-s3
