@@ -140,7 +140,7 @@ You can run the following command to trigger the same workflow, using minio to p
 kubectl -n argo create -f workflow-s3.yml
 ```
 
-# Argo Rollouts (Work in progress - contact hello@pipekit.io for more information)
+# Argo Rollouts
 Now that you understand how you could deploy using Argo Workflows and Argo CD, you may wish to experiment with Argo Rollouts. This is a more advanced deployment tool that allows you to do things like canary deployments and blue/green deployments.
 
 Typically, you would use Argo Rollouts in combination with Argo CD, to control the rate at which your application is deployed to your cluster. Unfortunately, this is not possible to include in this example without requiring you to fork this repo to be able to make changes to git that Argo CD picks up.
@@ -169,10 +169,10 @@ Once the setup is completed (3-7 mins depending on how sprightly your local mach
 ```bash
 kubectl -n argo create -f rollouts-workflow.yml
 
-## TODO If you want to use the minio/s3/artifacts version, you can run:
+# If you prefer to use the minio/s3/artifacts version, you can run:
 kubectl -n argo create -f rollouts-workflow-s3.yml
 
-## TODO If you prefer to run using Hera, Ensure you have python and the hera framework installed and run:
+# TODO If you prefer to run using Hera, Ensure you have python and the hera framework installed and run:
 python hera/nfs/rollouts-workflow.py
 ```
 
@@ -187,11 +187,11 @@ kubectl -n final-application get pods
 kubectl -n argo create -f rollouts-workflow-2.yml
 kubectl -n final-application get rollouts --watch
 
-## TODO If you want to use the minio/s3/artifacts version, you can run:
+# If you prefer to use the minio/s3/artifacts version, you can run:
 kubectl -n argo create -f rollouts-workflow-s3-2.yml
 kubectl -n final-application get rollouts --watch
 
-## TODO If you prefer to run using Hera, Ensure you have python and the hera framework installed and run:
+# TODO If you prefer to run using Hera, Ensure you have python and the hera framework installed and run:
 python hera/nfs/rollouts-workflow-2.py
 kubectl -n final-application get rollouts --watch
 ```
