@@ -172,7 +172,7 @@ kubectl -n argo create -f rollouts-workflow.yml
 # If you prefer to use the minio/s3/artifacts version, you can run:
 kubectl -n argo create -f rollouts-workflow-s3.yml
 
-# TODO If you prefer to run using Hera, Ensure you have python and the hera framework installed and run:
+# If you prefer to run using Hera, Ensure you have python and the hera framework installed and run:
 python hera/nfs/rollouts-workflow.py
 ```
 
@@ -191,7 +191,7 @@ kubectl -n final-application get rollouts --watch
 kubectl -n argo create -f rollouts-workflow-s3-2.yml
 kubectl -n final-application get rollouts --watch
 
-# TODO If you prefer to run using Hera, Ensure you have python and the hera framework installed and run:
+# If you prefer to run using Hera, Ensure you have python and the hera framework installed and run:
 python hera/nfs/rollouts-workflow-2.py
 kubectl -n final-application get rollouts --watch
 ```

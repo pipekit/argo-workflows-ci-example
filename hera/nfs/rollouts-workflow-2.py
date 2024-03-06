@@ -15,7 +15,7 @@ with Workflow(
         Parameter(name="app_repo", value="argo-workflows-ci-example"),
         Parameter(name="git_branch", value="main"),
         Parameter(name="target_branch", value="main"),
-        Parameter(name="container_tag", value="stable"),
+        Parameter(name="container_tag", value="new"),
         Parameter(name="container_image", value="k3d-registry.localhost:5000/hello-world"),
         Parameter(name="dockerfile", value="Dockerfile"),
         Parameter(name="path", value="/CI"),
