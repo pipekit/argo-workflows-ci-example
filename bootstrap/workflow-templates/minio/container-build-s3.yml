@@ -41,7 +41,7 @@ spec:
         - name: modified_git_repo
           path: /container-build
     container:
-      image: moby/buildkit:v0.12.5-rootless
+      image: moby/buildkit:v0.13.0-rootless
       command:
         - sh
         - -c
