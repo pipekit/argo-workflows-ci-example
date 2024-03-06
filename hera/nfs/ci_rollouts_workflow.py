@@ -36,13 +36,13 @@ with WorkflowTemplate(
         # We do this a) because NFS shares are slow and b) to allow us to run another workflow step alongside the build if we wish.
     volumes=[EmptyDirVolume(name="container-build")],
     arguments=[
-        Parameter(name="app_repo", value="placeholder"),
-        Parameter(name="git_branch", value="placeholder"),
-        Parameter(name="target_branch", value="placeholder"),
-        Parameter(name="container_tag", value="placeholder"),
-        Parameter(name="container_image", value="placeholder"),
-        Parameter(name="dockerfile", value="placeholder"),
-        Parameter(name="path", value="placeholder"),
+        Parameter(name="app_repo"),
+        Parameter(name="git_branch"),
+        Parameter(name="target_branch"),
+        Parameter(name="container_tag"),
+        Parameter(name="container_image"),
+        Parameter(name="dockerfile"),
+        Parameter(name="path"),
     ],
     annotations={
         'workflows.argoproj.io/description': '''A basic CI leveraging Argo Workflows.
