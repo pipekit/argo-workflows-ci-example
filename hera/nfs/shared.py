@@ -18,7 +18,7 @@ def add_common_annotations_to_workflows(w: Workflow) -> Workflow:
     common_annotations = {
         'workflows.argoproj.io/maintainer': 'Pipekit Inc',
         'workflows.argoproj.io/maintainer_url': 'https://github.com/pipekit/argo-workflows-ci-example',
-        'workflows.argoproj.io/version': '>= 3.3.6',
+        'workflows.argoproj.io/version': '>= 3.5.2',
     }
     if w.annotations is None:
         w.annotations = common_annotations  # add common ones by default
@@ -31,7 +31,7 @@ def add_common_annotations_to_workflow_templates(w: WorkflowTemplate) -> Workflo
     common_annotations = {
         'workflows.argoproj.io/maintainer': 'Pipekit Inc',
         'workflows.argoproj.io/maintainer_url': 'https://github.com/pipekit/argo-workflows-ci-example',
-        'workflows.argoproj.io/version': '>= 3.3.6',
+        'workflows.argoproj.io/version': '>= 3.5.2',
     }
     if w.annotations is None:
         w.annotations = common_annotations  # add common ones by default
