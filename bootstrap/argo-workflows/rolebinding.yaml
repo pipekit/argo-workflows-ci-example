@@ -48,6 +48,7 @@ rules:
   - workflowtasksets/finalizers
   - workflowtaskresults
   - applications
+  - rollouts
   verbs:
   - get
   - list
