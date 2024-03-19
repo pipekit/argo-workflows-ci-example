@@ -42,13 +42,20 @@ rules:
 - apiGroups:
   - argoproj.io
   resources:
-  - rollouts
+  - workflows
+  - workflows/finalizers
+  - workflowtasksets
+  - workflowtasksets/finalizers
+  - workflowtaskresults
+  - applications
   verbs:
-  - create
   - get
+  - list
+  - watch
   - update
-  - delete
   - patch
+  - delete
+  - create
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
