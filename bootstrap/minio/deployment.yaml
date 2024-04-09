@@ -26,7 +26,7 @@ spec:
           value: "pipekit"
         - name: MINIO_ROOT_PASSWORD
           value: "sup3rs3cr3tp4ssw0rd1"
-        image: minio/minio:RELEASE.2024-03-15T01-07-19Z
+        image: minio/minio:RELEASE.2024-04-06T05-26-02Z.fips
         imagePullPolicy: Always
         name: minio
         ports:
