@@ -111,7 +111,7 @@ ingress-nginx is installed purely to allow you to access the Argo Workflows UI a
 nfs-server-provisioner allows us to mount an NFS share into the workflow. This allows for multiple steps to interact with the same volume, even in parallel. nfs-server-provisioner uses disk on your nodes to achieve this. An alternative approach is to use Argo Workflows' archive feature to allow you to push data to a remote location such as S3.  For CI, this can be quite costly, pushing and pulling the data for each step in a workflow will not be efficient. Keeping the data as physically close to the compute as possible is a good idea.
 
 ## Workflow Logistics
-The main workflow template that is being called is [ci-workflow.yaml](bootstrap/workflow-templates/ci-workflow.yml). This requests the appropriate volumes, optionally sets up some prometheus metrics and defines the actual DAG for the workflow.
+The main workflow template that is being called for the NFS flow is [ci-workflow.yaml](bootstrap/workflow-templates/nfs/ci-workflow.yml). This requests the appropriate volumes, optionally sets up some prometheus metrics and defines the actual DAG for the workflow.
 
 Most of the other steps called with in that workflow are themselves in [their own workflow template](bootstrap/workflow-templates/). This makes it easier for future expansion, and means you don't need to write a duplicate workflow for each CI job. In order for this to work, you should parametrise as much as is sensibly possible within your workflow templates. We have done so here as an example, but there is probably room for improvement.
 
