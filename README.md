@@ -19,7 +19,7 @@
 It does not pretend to be a definitive example, but it aims to inspire.
 In order to make this a semi-usable example, we have cut a number of security corners. Please don't just blindly run this in production.
 
-# Software Versions Used:
+# Software Used:
 This example installs a number of software packages:
 
 - Argo CD
