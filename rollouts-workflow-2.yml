@@ -17,7 +17,7 @@ spec:
       - name: container_tag
         value: 'new'
       - name: container_image
-        value: "k3d-registry.localhost:5000/hello-world"
+        value: "k3d-registry.localhost:5001/hello-world"
       - name: dockerfile
         value: Dockerfile
       - name: path

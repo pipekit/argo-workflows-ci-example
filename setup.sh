@@ -17,6 +17,7 @@ kubectl -n kube-system rollout status deployment/metrics-server
 kubectl apply -k bootstrap/argocd
 kubectl -n argocd rollout status statefulset/argocd-application-controller
 kubectl -n argocd rollout status deployment/argocd-repo-server
+kubectl apply -k bootstrap/argocd
 kubectl -n argocd apply -f bootstrap/app-of-apps"${1}"
 
 # Create 'final-application' namespace for the final application

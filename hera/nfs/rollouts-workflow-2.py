@@ -16,7 +16,7 @@ with Workflow(
         Parameter(name="git_branch", value="main"),
         Parameter(name="target_branch", value="main"),
         Parameter(name="container_tag", value="new"),
-        Parameter(name="container_image", value="k3d-registry.localhost:5000/hello-world"),
+        Parameter(name="container_image", value="k3d-registry.localhost:5001/hello-world"),
         Parameter(name="dockerfile", value="Dockerfile"),
         Parameter(name="path", value="/CI"),
     ],

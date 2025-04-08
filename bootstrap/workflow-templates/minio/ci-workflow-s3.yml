@@ -74,14 +74,14 @@ spec:
     - name: container_tag
       value: 'stable'
     - name: container_image
-      value: "k3d-registry.localhost:5000/hello-world"
+      value: "k3d-registry.localhost:5001/hello-world"
     - name: dockerfile
       value: Dockerfile
     - name: path
       value: "/CI"
  # All the steps in this DAG are referencing external templates.
  # This allows us to re-use those templates in other workflows, and also makes this CI workflow quite tidy.
- # For reference we have also included a 'local' template (delete-application) to show that it's possible to mix-and-match local and external templates. 
+ # For reference we have also included a 'local' template (delete-application) to show that it's possible to mix-and-match local and external templates.
   templates:
     - name: main
       dag:

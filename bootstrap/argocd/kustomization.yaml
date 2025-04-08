@@ -5,6 +5,7 @@ namespace: argocd
 resources:
 - github.com/argoproj/argo-cd/manifests/cluster-install?ref=v2.14.9
 - namespace.yml
+- project.yml
 
 patches:
 - path: argo-cm.yml

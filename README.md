@@ -226,13 +226,9 @@ spec:
 
 # Further Help and Support
 
-## Mac Users
-Monterey (MacOS 12) and greater users might find that the k3d cluster doesn't start due to port 5000 being in use.
-Apple automatically enables the Airplay Receiver option in the Sharing menu of System Preferences. You can either disable this, or change port 5000 in this repo to something else.
-
 ## Argo Workflows Support
 
-Pipekit’s team of Argo experts provide professional support for companies using Argo Workflows. Pipekit's Argo contributors help platform teams optimize pipeline performance, squash upstream bugs, and make faster technical decisions. Learn more at [pipekit.io/services](https://pipekit.io/services?utm_campaign=ci-example).
+Pipekit’s team of Argo experts provide professional support for companies using Argo Workflows. Pipekit's Argo maintainers help platform teams optimize pipeline performance, squash upstream bugs, and make faster technical decisions. Learn more at [pipekit.io/services](https://pipekit.io/services?utm_campaign=ci-example).
 
 For more information about Argo Workflows, please see the following resources:
 
