@@ -11,7 +11,7 @@ spec:
         - --auth-mode=server
         name: argo-server
         env:
-          - name: BASE_HREF
+          - name: ARGO_BASE_HREF
             value: /argo/
           - name: FIRST_TIME_USER_MODAL
             value: "false"
