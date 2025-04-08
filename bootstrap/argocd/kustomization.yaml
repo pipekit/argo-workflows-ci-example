@@ -12,3 +12,15 @@ patches:
   target:
     kind: ConfigMap
     name: argocd-cm
+- path: patch-dex-server.yml
+  target:
+    kind: Deployment
+    name: argocd-dex-server
+- path: patch-applicationset-controller.yml
+  target:
+    kind: Deployment
+    name: argocd-applicationset-controller
+- path: patch-notifications-controller.yml
+  target:
+    kind: Deployment
+    name: argocd-notifications-controller

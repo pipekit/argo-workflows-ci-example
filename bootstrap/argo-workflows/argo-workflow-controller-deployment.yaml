@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workflow-controller-patch
+spec:
+  template:
+    spec:
+      nodeSelector:
+        nodegroup: arm-spot
+      containers:
+        - name: workflow-controller
+          env:
+            - name: DEFAULT_REQUEUE_TIME
+              value: "3s"
+            - name: LEADER_ELECTION_DISABLE
+              value: "true"

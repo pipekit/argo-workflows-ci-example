@@ -18,3 +18,7 @@ patches:
   target:
     kind: Deployment
     name: argo-server
+- path: argo-workflow-controller-deployment.yaml
+  target:
+    kind: Deployment
+    name: workflow-controller
