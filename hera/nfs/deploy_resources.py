@@ -77,7 +77,7 @@ spec:
     spec:
       containers:
         - name: eg-app
-          image: k3d-registry.localhost:5001/hello-world:{{workflow.parameters.container_tag}}
+          image: k3d-registry.localhost:5000/hello-world:{{workflow.parameters.container_tag}}
           imagePullPolicy: Always
           readinessProbe:
             failureThreshold: 3

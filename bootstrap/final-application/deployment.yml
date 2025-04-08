@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: eg-app
-          image: k3d-registry.localhost:5001/hello-world:stable
+          image: k3d-registry.localhost:5000/hello-world:stable
           imagePullPolicy: Always
           readinessProbe:
             failureThreshold: 3
