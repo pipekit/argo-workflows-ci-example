@@ -228,7 +228,7 @@ spec:
 
 ## Mac Users
 Monterey (MacOS 12) and greater users might find that the k3d cluster doesn't start due to port 5000 being in use.
-Apple automatically enables the Airplay Receiver option in the Sharing menu of System Preferences. You can either disable this, or change port 5000 in this repo to something else.
+Apple automatically enables the Airplay Receiver option in the Airdrop & Handoff menu of System Settings. You can either disable this, or change port 5000 in this repo to something else.
 
 ## Argo Workflows Support
 
