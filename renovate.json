@@ -7,6 +7,19 @@
   "kubernetes": {
     "fileMatch": ["\\.yaml$", "\\.yml$", "\\.conf$"]
   },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/k3d\\.conf$/"
+      ],
+      "matchStrings": [
+        "image: (?<depName>.*?):(?<currentValue>.*?)\\s"
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    }
+  ],
   "regexManagers": [
     {
       "fileMatch": ["kustomization.yaml$"],
