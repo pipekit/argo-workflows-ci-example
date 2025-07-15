@@ -1,11 +1,15 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
+    "config:recommended",
     "docker:enableMajor"
   ],
   "kubernetes": {
-    "fileMatch": ["\\.yaml$", "\\.yml$", "\\.conf$"]
+    "managerFilePatterns": [
+      "/\\.yaml$/",
+      "/\\.yml$/",
+      "/\\.conf$/"
+    ]
   },
   "customManagers": [
     {
@@ -20,23 +24,21 @@
       "versioningTemplate": "docker"
     }
   ],
-  "regexManagers": [
-    {
-      "fileMatch": ["kustomization.yaml$"],
-      "matchStrings": [
-        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*https:\/\/github.com\/argoproj\/argo-workflows\/releases\/download\/(?<currentValue>.*)\/install.yaml\\s"
-      ],
-      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
-    }
-  ],
   "packageRules": [
     {
-      "packagePatterns": ["^minio"],
       "versioning": "regex:^RELEASE\\.(?<major>\\d{4})-(?<minor>\\d{2})-(?<patch>\\d{2})",
-      "schedule": ["on the last day of the month"]
+      "schedule": [
+        "on the first day of the month"
+      ],
+      "matchPackageNames": [
+        "/^minio/"
+      ]
     },
     {
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "matchCurrentVersion": "!/^0/",
       "automerge": true
     }
